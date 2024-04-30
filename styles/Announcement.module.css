@@ -1,0 +1,21 @@
+.container{
+    height: 30px;
+    align-items: center;
+    background-color: #744323;
+    color: white;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: center;
+    -ms-flex-pack: justify;
+    justify-content: center;
+    -webkit-align-item: center;
+    -webkit-box-align-item: center;
+    -ms-flex-align-item: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+}

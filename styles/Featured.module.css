@@ -1,0 +1,40 @@
+.container{
+    height: calc(100vh - 100px);
+    background-color: #7c6353;;
+    overflow: hidden;
+    position: relative;
+}
+.arrowContainer{
+    position: absolute;
+    padding: 30px;
+    height: 20%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    cursor: pointer;
+    z-index: 2;
+    color: white;
+}
+.wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 326vw;
+    height: 100%;
+    transition: all 1.5s ease-in-out;
+}
+.imgContainer{
+    position: relative;
+    width: 100vw;
+    height: 80%;
+    top: 50px;
+}
+@media screen and (max-width:480px) {
+    .container {
+     height: 50vh;
+  }
+    .item:nth-child(1) {
+     flex: 3;
+  }
+     
+  }
