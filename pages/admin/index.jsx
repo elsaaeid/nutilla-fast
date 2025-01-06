@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "../../styles/Admin.module.css";
 
 const Index = ({ orders, products }) => {
-  const [nutellaList, setNutellaList] = useState(products);
+  const [productList, setProductList] = useState(products);
   const [orderList, setOrderList] = useState(orders);
   const status = ["preparing", "on the way", "delivered"];
 
@@ -14,7 +14,7 @@ const Index = ({ orders, products }) => {
       const res = await axios.delete(
         "http://localhost:3000/api/products/" + id
       );
-      setNutellaList(nutellaList.filter((nutella) => nutella._id !== id));
+      setProductList(productList.filter((product) => product._id !== id));
     } catch (err) {
       console.log(err);
     }
@@ -51,7 +51,7 @@ const Index = ({ orders, products }) => {
               <th>Action</th>
             </tr>
           </tbody>
-          {pizzaList.map((product) => (
+          {productList.map((product) => (
             <tbody key={product._id}>
               <tr className={styles.trTitle}>
                 <td>

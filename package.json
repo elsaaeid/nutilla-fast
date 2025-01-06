@@ -12,8 +12,10 @@
     "@paypal/react-paypal-js": "^7.8.1",
     "@reduxjs/toolkit": "^1.8.6",
     "axios": "^1.1.3",
+    "cookie": "^1.0.2",
     "mongoose": "^6.7.0",
     "next": "13.0.0",
+    "node-modules": "^1.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.4"

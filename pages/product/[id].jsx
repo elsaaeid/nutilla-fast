@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { addProduct } from "../../redux/cartSlice";
 
 
-const Product = ({nutilla}) => {
+const Product = ({product}) => {
   const [price, setPrice] = useState();
   const [quantity, setQuantity] = useState(1);
   const [extras, setExtras] = useState([]);
@@ -29,20 +29,20 @@ const Product = ({nutilla}) => {
   };
 
   const handleClick = () => {
-    dispatch(addProduct({...nutella, extras, price, quantity}));
+    dispatch(addProduct({...product, extras, price, quantity}));
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.imgContainer}>
-          <Image src={nutilla.img} layout="fill" alt="" />
+          <Image src={product.img} layout="fill" alt="" />
         </div>
       </div>
       <div className={styles.right}>
-        <h1 className={styles.title}>{nutilla.title}</h1>
-        <span className={styles.price}>${nutilla.price}</span>
-        <p className={styles.desc}>{nutilla.desc}</p>
+        <h1 className={styles.title}>{product.title}</h1>
+        <span className={styles.price}>${product.price}</span>
+        <p className={styles.desc}>{product.desc}</p>
         <h3 className={styles.choose}>Choose additional ingredients</h3>
         <div className={styles.ingredients}>
             <div className={styles.option}>
@@ -96,7 +96,7 @@ export const getServerSideProps = async ({ params }) => {
   const res = await axios.get(`http://localhost:3000/api/products/${params.id}`);
 
   return {
-    props: { nutilla: res.data }
+    props: { product: res.data }
   };
 };
 

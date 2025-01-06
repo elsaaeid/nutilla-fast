@@ -4,10 +4,10 @@ import { useState } from "react";
 import Add from "../components/Add";
 import AddButton from "../components/AddButton";
 import Featured from "../components/Featured";
-import NutillaList from "../components/NutillaList";
+import ProductsList from "../components/ProductsList";
 import styles from "../styles/Home.module.css";
 
-export default function Home({ nutillaList }) {
+export default function Home({ productsList }) {
   const [close, setClose] = useState(true);
   return (
     <div className={styles.container}>
@@ -18,7 +18,7 @@ export default function Home({ nutillaList }) {
       </Head>
       <Featured />
       {<AddButton setClose={setClose} />}
-      <NutillaList nutillaList={nutillaList} />
+      <ProductsList productsList={productsList} />
       {!close && <Add setClose={setClose} />}
     </div>
   );
@@ -35,7 +35,7 @@ export const getServerSideProps = async (ctx) => {
 
   return {
     props: {
-      nutillaList: res.data
+      productsList: res.data
     },
   };
 };
