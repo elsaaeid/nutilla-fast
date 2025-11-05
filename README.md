@@ -2,6 +2,10 @@
 
 >A small Next.js e-commerce demo for selling Nutella-style products. Includes product management (admin), a persistent cart with anonymous-user support, and PayPal checkout integration.
 
+# Demo Live
+- [Demo Live](https://nutilla-fast.vercel.app)
+
+
 ## Contents
 - Project: Next.js (Pages router)
 - API: Next.js API routes backed by MongoDB (Mongoose)
@@ -98,7 +102,7 @@ See the project `README` or Vercel docs for more details.
 - Add server-side merge tests and more robust validation before production usage.
 
 ## License
-This repository does not include a license file. Add one if you intend to publish this project.
 
----
-If you want, I can add a short `vercel.json` and a GitHub Actions workflow to run the build on PRs — tell me which you'd prefer next.
+This project does not include a license by default. If you add a license file, link to it here:
+
+- [LICENSE.md](./LICENSE.md)
