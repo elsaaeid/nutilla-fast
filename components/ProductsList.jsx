@@ -18,7 +18,7 @@ const ProductsList = ({ productsList = [] }) => {
         <div style={{ padding: 24 }}>
           <strong>No products to show.</strong>
           <div style={{ marginTop: 12 }}>
-            This usually means the server didn't return product data. For debugging, here's what the
+            This usually means the server did not return product data. For debugging, here is what the
             component received:
           </div>
           <pre style={{ whiteSpace: 'pre-wrap', marginTop: 12, background: '#f6f6f6', padding: 12 }}>

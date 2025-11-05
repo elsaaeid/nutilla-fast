@@ -11,7 +11,7 @@ export default function CheckEmail() {
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Check your email</h1>
         <p style={{ textAlign: 'center', marginTop: 8 }}>
-          We've sent a verification link to <strong>{email || 'your email'}</strong>.
+          We have sent a verification link to <strong>{email || 'your email'}</strong>.
           Please check your inbox (and spam folder) and follow the instructions to complete registration.
         </p>
 
