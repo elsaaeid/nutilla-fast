@@ -1,0 +1,28 @@
+.button, 
+.linkContainer {
+  color: white;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+.button {
+  background-color: #a52a2a;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: #822020;
+}
+
+.linkContainer {
+  background-color: #838383;
+  transition: all 0.3s ease;
+}
+.linkContainer:hover {
+  background-color: #5a5a5a;
+}

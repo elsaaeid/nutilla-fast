@@ -1,0 +1,136 @@
+.container{
+    height: 100px;
+    padding: 0px 20px;
+    background-color: #7c6353;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.list{
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    color: white;
+}
+.logo img{
+    width: 100%;
+    height: auto;
+}
+.logo{
+    width: 150px;
+    height: auto;
+    cursor: pointer;
+}
+.listItem{
+    margin: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.listItem:hover {
+ color: rgb(0, 0, 0);
+}
+.listItem.active {
+    color: rgb(0, 0, 0);
+}
+.cart{
+    position: relative;
+    cursor: pointer;
+}
+.account{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    margin-right: 12px;
+    text-decoration: none;
+}
+.accountIcon{
+    color: white;
+    width: 24px;
+    height: 24px;
+}
+.accountName{
+    color: white;
+    font-weight: 500;
+}
+.cartIcon{
+    color: white;
+    width: 28px;
+    height: 28px;
+}
+
+.counter{
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: saddlebrown;
+    transition: all 0.3s ease;
+    transition-property: background-color, transform;
+}
+.cart:hover .counter {
+    background-color: #f0e68c;
+    transform: scale(1.1);
+}
+/* Hamburger styles (hidden on desktop) */
+.hamburger{
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+.icon{
+    color: white;
+    width: 28px;
+    height: 28px;
+}
+@media screen and (max-width:768px) {
+    .listItem {
+        font-size: 14px;
+    }
+    .hamburger{
+        display: block;
+    }
+    .list{
+        display: none;
+    }
+    .list.open{
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 50px;
+        right: 50%;
+        transform: translateX(100px);
+        background: #7c6353;
+        padding: 10px 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        border-radius: 6px;
+        z-index: 1000;
+    }
+    .listItem{
+        margin: 8px 0;
+    }
+}
+
+@media screen and (max-width:480px) {
+    .listItem {
+        font-size: 12px;
+    }
+    .hamburger{
+        display: block;
+    }
+}
