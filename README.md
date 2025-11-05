@@ -1,34 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Nutilla Fast
 
-## Getting Started
+>A small Next.js e-commerce demo for selling Nutella-style products. Includes product management (admin), a persistent cart with anonymous-user support, and PayPal checkout integration.
 
-First, run the development server:
+## Contents
+- Project: Next.js (Pages router)
+- API: Next.js API routes backed by MongoDB (Mongoose)
+- Client state: Redux Toolkit (cart slice)
+- Image uploads: Cloudinary (unsigned preset used in UI)
+- Payments: PayPal JS SDK (sandbox support via NEXT_PUBLIC_PAYPAL_CLIENT_ID)
 
-```bash
-npm run dev
-# or
-yarn dev
+## Used technologies
+- Next.js (React) — SSR / API routes / routing
+- React 18
+- Redux Toolkit — client-side cart state
+- Mongoose + MongoDB (Atlas recommended for production)
+- Axios — HTTP client
+- Cloudinary — image hosting / uploads (client-side unsigned preset)
+- @paypal/react-paypal-js — PayPal integration
+- bcryptjs — password hashing (auth helpers)
+- react-icons — UI icons
+- CSS Modules — component-scoped styles
+
+## Features
+- Admin product creation, edit and delete (protected)
+- Product listing and details pages
+- Add to cart for anonymous and logged-in users
+- Anonymous cart persisted to server and localStorage; merged into user cart on login
+- Quantity controls, remove & clear cart
+- PayPal checkout integration (sandbox by default)
+
+## Getting started (local development)
+1. Clone the repo and install dependencies
+
+```powershell
+git clone <your-repo-url>
+cd nutilla-fast
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create a `.env.local` in the project root with the required environment variables (example):
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```
+MONGO_URL=<your-mongo-connection-string>
+TOKEN=<dev-admin-token>
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=sb
+# Optional Cloudinary unsigned preset values if used in UI
+# CLOUDINARY_CLOUD_NAME=dzbi59kmu
+# CLOUDINARY_UPLOAD_PRESET=jwukjk1g
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+3. Run in development
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```powershell
+npm run dev
+```
 
-## Learn More
+4. Build for production
 
-To learn more about Next.js, take a look at the following resources:
+```powershell
+npm run build
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment variables
+- `MONGO_URL` — MongoDB connection string (required for API routes)
+- `TOKEN` — development admin token used by server APIs (or use DB user role 'admin')
+- `NEXT_PUBLIC_PAYPAL_CLIENT_ID` — PayPal client id (use `sb` for sandbox)
+- Cloudinary config (if using server-signed uploads in future)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## API routes of interest
+- `GET /api/products` — list products
+- `POST /api/products` — create product (admin)
+- `GET|PUT|DELETE /api/products/[id]` — product CRUD (PUT/DELETE protected)
+- `GET|POST /api/cart` — get or persist cart; supports anonymous cartId and merging on login
+- `POST /api/login`, `POST /api/register`, `GET /api/me` — simple auth endpoints (dev cookie/token based)
 
-## Deploy on Vercel
+## Deploying to Vercel (quick)
+1. Push repository to GitHub/GitLab/Bitbucket
+2. Import the repo in Vercel and choose Next.js
+3. Add Environment Variables in Vercel dashboard (MONGO_URL, TOKEN, NEXT_PUBLIC_PAYPAL_CLIENT_ID, etc.)
+4. Deploy — Vercel builds and serves the app; check serverless logs for runtime errors
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See the project `README` or Vercel docs for more details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Project structure (high level)
+- `pages/` — Next.js pages and API routes
+	- `pages/api/` — server API routes
+- `components/` — shared React components (Navbar, ProductCard, Add, Cart)
+- `models/` — Mongoose models (Product, Cart, User)
+- `redux/` — Redux store and slices
+- `util/` — helpers (db connect)
+- `styles/` — CSS modules and global styles
+
+## Notes & Recommendations
+- In production, replace the dev cookie/token auth with proper sessions or JWTs.
+- Consider using signed Cloudinary uploads or a server-side upload flow for better security.
+- Add server-side merge tests and more robust validation before production usage.
+
+## License
+This repository does not include a license file. Add one if you intend to publish this project.
+
+---
+If you want, I can add a short `vercel.json` and a GitHub Actions workflow to run the build on PRs — tell me which you'd prefer next.
