@@ -49,6 +49,39 @@
 .qtyBtn, .removeBtn {
   cursor: pointer;
 }
+/* inline qty controls (match ProductCard styles) */
+.qtyControlsInline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qtyBtn {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+}
+.removeBtn {
+  background: transparent;
+  border: none;
+  color: #c22;
+  cursor: pointer;
+  padding: 6px;
+}
+.quantity, .qtyNumber {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+.disabledLink {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: not-allowed;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 .payButton {
   color: #51d11e;
   font-weight: bold;
@@ -67,7 +100,6 @@
   font-size: 18px;
 }
 .wrapper{
-  width: 90%;
   background-color: #333;
   padding: 10px;
   display: flex;

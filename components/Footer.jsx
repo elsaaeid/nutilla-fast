@@ -18,7 +18,7 @@ const Footer = () => {
           <div className={styles.card}>
             <h1 className={styles.title}>FIND OUR RESTAURANTS</h1>
             <p className={styles.text}>
-              1654 R. Don Road <span className={styles.highlight}></span>.
+              1654 R. Don Road <span className={styles.highlight}></span>
               <br /> NewYork, 85022
               <br /> (602) 867-1010
             </p>

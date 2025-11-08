@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import { reset, removeProduct, setCart, updateQuantity } from "../redux/cartSlice";
-import { FiPlus, FiMinus, FiTrash } from 'react-icons/fi'
+import QtyControls from '../components/QtyControls'
 import OrderDetail from '../components/OrderDetail'
 
 const Cart = () => {
@@ -162,96 +162,47 @@ const Cart = () => {
                 <div className={styles.cardRow}>
                   <div className={styles.cardRowRight}>
                     <div className={styles.qtyControlsInline}>
-                      {(() => {
-                        const q = Number(product.quantity) || 1
-                        if (q === 1) {
-                          // show Increase and Trash
-                          return (
-                            <>
-                              <span className={styles.quantity}>{q}</span>
-                              <button
-                                className={styles.qtyBtn}
-                                onClick={async () => {
-                                  const amount = 1
-                                  const newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
-                                  const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                                  dispatch(updateQuantity({ index: idx, amount }))
-                                  try {
-                                    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                                    const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
-                                    if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-                                  } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
-                                  try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-                                }}
-                                aria-label="Increase"
-                              >
-                                <FiPlus />
-                              </button>
-                              <button
-                                className={styles.removeBtn}
-                                onClick={async () => {
-                                  const newProducts = cart.products.filter((_, i) => i !== idx)
-                                  const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                                  dispatch(removeProduct(idx))
-                                  try {
-                                    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                                    const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
-                                    if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-                                  } catch (e) { console.warn('Failed to persist cart after remove:', e?.message || e) }
-                                  try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-                                }}
-                                aria-label="Remove"
-                              >
-                                <FiTrash />
-                              </button>
-                            </>
-                          )
-                        }
-                        // q > 1: show Decrease and Increase
-                        return (
-                          <>
-                            <button
-                              className={styles.qtyBtn}
-                              onClick={async () => {
-                                const amount = -1
-                                const newProducts = cart.products
-                                  .map((p, i) => (i === idx ? { ...p, quantity: Math.max(0, (Number(p.quantity) || 0) + amount) } : p))
-                                  .filter((p) => (Number(p.quantity) || 0) > 0)
-                                const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                                dispatch(updateQuantity({ index: idx, amount }))
-                                try {
-                                  const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                                  const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
-                                  if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-                                } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
-                                try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-                              }}
-                              aria-label="Decrease"
-                            >
-                              <FiMinus />
-                            </button>
-                            <span className={styles.quantity}>{q}</span>
-                            <button
-                              className={styles.qtyBtn}
-                              onClick={async () => {
-                                const amount = 1
-                                const newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
-                                const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                                dispatch(updateQuantity({ index: idx, amount }))
-                                try {
-                                  const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                                  const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
-                                  if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-                                } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
-                                try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-                              }}
-                              aria-label="Increase"
-                            >
-                              <FiPlus />
-                            </button>
-                          </>
-                        )
-                      })()}
+                      <QtyControls
+                        quantity={product.quantity}
+                        styles={styles}
+                        onIncrease={async () => {
+                          const amount = 1
+                          const newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
+                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                          dispatch(updateQuantity({ index: idx, amount }))
+                          try {
+                            const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
+                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                            if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+                          } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
+                          try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+                        }}
+                        onDecrease={async () => {
+                          const amount = -1
+                          const newProducts = cart.products
+                            .map((p, i) => (i === idx ? { ...p, quantity: Math.max(0, (Number(p.quantity) || 0) + amount) } : p))
+                            .filter((p) => (Number(p.quantity) || 0) > 0)
+                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                          dispatch(updateQuantity({ index: idx, amount }))
+                          try {
+                            const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
+                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                            if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+                          } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
+                          try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+                        }}
+                        onRemove={async () => {
+                          const newProducts = cart.products.filter((_, i) => i !== idx)
+                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                          dispatch(removeProduct(idx))
+                          try {
+                            const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
+                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                            if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+                          } catch (e) { console.warn('Failed to persist cart after remove:', e?.message || e) }
+                          try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+                        }}
+                      />
                     </div>
 
                     <div className={styles.total}>Total: ${product.price * product.quantity}</div>

@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, updateQuantity, removeProduct } from "../../redux/cartSlice";
 import axios from 'axios'
-import { FiShoppingCart, FiPlus, FiMinus, FiTrash } from 'react-icons/fi'
+import { FiShoppingCart } from 'react-icons/fi'
+import QtyControls from '../../components/QtyControls'
 
 
 const Product = ({product}) => {
@@ -212,32 +213,17 @@ const Product = ({product}) => {
                 </>
               )
             }
-            // in-cart controls
+            // in-cart controls: use shared QtyControls
             const cartItem = idx === -1 ? { quantity: 1 } : cart.products[idx]
             const q = Number(cartItem.quantity) || 1
-            if (q === 1) {
-              return (
-                <div className={styles.qtyControlsInline}>
-                  <span className={styles.qtyNumber}>{q}</span>
-                  <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
-                    <FiPlus />
-                  </button>
-                  <button className={styles.removeBtn} onClick={() => idx === -1 ? setInCartLocal(false) : handleRemoveFromCart(idx)} aria-label="Remove">
-                    <FiTrash />
-                  </button>
-                </div>
-              )
-            }
             return (
-              <div className={styles.qtyControlsInline}>
-                <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleDecrease(idx)} aria-label="Decrease">
-                  <FiMinus />
-                </button>
-                <span className={styles.qtyNumber}>{q}</span>
-                <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
-                  <FiPlus />
-                </button>
-              </div>
+              <QtyControls
+                quantity={q}
+                onIncrease={() => (idx === -1 ? null : handleIncrease(idx))}
+                onDecrease={() => (idx === -1 ? null : handleDecrease(idx))}
+                onRemove={() => (idx === -1 ? setInCartLocal(false) : handleRemoveFromCart(idx))}
+                styles={styles}
+              />
             )
           })()}
         </div>

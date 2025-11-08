@@ -6,8 +6,9 @@ import Link from "next/link";
 import { useDispatch, useSelector } from 'react-redux'
 import { addProduct, removeProduct, updateQuantity } from '../redux/cartSlice'
 import axios from 'axios'
-import { FiShoppingCart, FiPlus, FiMinus, FiTrash } from 'react-icons/fi'
+import { FiShoppingCart } from 'react-icons/fi'
 import { FiEdit } from 'react-icons/fi'
+import QtyControls from './QtyControls'
 import { AdminAuthorLink } from '../protect/AuthGate'
 
 const ProductCard = ({ product }) => {
@@ -179,36 +180,17 @@ const ProductCard = ({ product }) => {
                 </button>
               )
             }
-            // Option 3: when in cart
-            // - qty === 1: show Increase and Trash (no Decrease)
-            // - qty > 1: show Decrease and Increase (no Trash)
             const idx = findIndexInCart(product)
             const cartItem = idx === -1 ? { quantity: 1 } : cart.products[idx]
             const q = Number(cartItem.quantity) || 1
-            if (q === 1) {
-              return (
-                <div className={styles.qtyControlsInline}>
-                  <span className={styles.quantity}>{q}</span>
-                  <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
-                    <FiPlus />
-                  </button>
-                  <button className={styles.removeBtn} onClick={() => idx === -1 ? setInCartLocal(false) : handleRemoveFromCart(idx)} aria-label="Remove">
-                    <FiTrash />
-                  </button>
-                </div>
-              )
-            }
-            // q > 1
             return (
-              <div className={styles.qtyControlsInline}>
-                <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleDecrease(idx)} aria-label="Decrease">
-                  <FiMinus />
-                </button>
-                <span className={styles.quantity}>{q}</span>
-                <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
-                  <FiPlus />
-                </button>
-              </div>
+              <QtyControls
+                quantity={q}
+                onIncrease={() => (idx === -1 ? null : handleIncrease(idx))}
+                onDecrease={() => (idx === -1 ? null : handleDecrease(idx))}
+                onRemove={() => (idx === -1 ? setInCartLocal(false) : handleRemoveFromCart(idx))}
+                styles={styles}
+              />
             )
           })()}
         </div>
