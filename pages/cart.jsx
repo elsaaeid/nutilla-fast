@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { reset, removeProduct, setCart, updateQuantity } from "../redux/cartSlice";
 import QtyControls from '../components/QtyControls'
 import OrderDetail from '../components/OrderDetail'
+import { normalizeCartItems, computeSubtotal } from '../util/cartHelpers'
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -24,6 +25,7 @@ const Cart = () => {
   const style = { layout: "vertical" };
   const dispatch = useDispatch();
   const router = useRouter();
+  
 
   // Compute totals outside of JSX to avoid inline IIFE parsing issues
   const subtotalDiscounted = Number(cart.total) || 0;
@@ -73,15 +75,33 @@ const Cart = () => {
     // load server-side cart on mount (if any) and populate redux
     const load = async () => {
       try {
+  // Decide source: if user is logged in (token cookie present) load from server; otherwise use localStorage
   const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-  const res = await axios.get(`/api/cart${cartId ? `?cartId=${cartId}` : ''}`)
-        const data = res.data || {}
-        // server returns { items: [...], subtotal } or a serialized cart object with .items
-        const items = Array.isArray(data.items) ? data.items : []
-        const subtotal = typeof data.subtotal === 'number' ? data.subtotal : Number(data.subtotal) || 0
-        if (items.length > 0) {
-          dispatch(setCart({ items, subtotal }))
-        }
+  const token = typeof window !== 'undefined' ? (document.cookie.match('(^|;)\\s*token\\s*=\\s*([^;]+)') ? document.cookie.match('(^|;)\\s*token\\s*=\\s*([^;]+)')[2] : null) : null
+  if (token) {
+    // logged-in: fetch server-side cart (may be an anonymous cartId or a user cart)
+    const res = await axios.get(`/api/cart${cartId ? `?cartId=${cartId}` : ''}`)
+    const data = res.data || {}
+    // server returns { items: [...], subtotal } or a serialized cart object with .items
+    const items = Array.isArray(data.items) ? data.items : []
+    const subtotal = typeof data.subtotal === 'number' ? data.subtotal : Number(data.subtotal) || 0
+    if (items.length > 0) {
+      dispatch(setCart({ items, subtotal }))
+    }
+  } else {
+    // not logged in: hydrate from localStorage (anonymous cart)
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        const items = Array.isArray(parsed) ? normalizeCartItems(parsed) : []
+        const subtotal = computeSubtotal(items)
+        if (items.length > 0) dispatch(setCart({ items, subtotal }))
+      }
+    } catch (e) {
+      // ignore malformed localStorage
+    }
+  }
       } catch (e) {
         console.warn('Failed to load server cart:', e?.message || e)
       }
@@ -106,6 +126,7 @@ const Cart = () => {
         },
       });
     }, [currency, showSpinner]);
+
 
     return (
       <>
@@ -180,11 +201,11 @@ const Cart = () => {
                     )}
                     <div className={styles.price}>
                       {product?.offer ? (
-                        <>
-                          <span className={styles.oldPrice}>$ {( (Number(product.price) || 0) / 0.75 ).toFixed(2)}</span>
-                          <span className={styles.discountPrice}>$ {(Number(product.price) || 0).toFixed(2)}</span>
+                        <div className={styles.priceContainer}>
+                          <span className={styles.oldPrice}>${( (Number(product.price) || 0) / 0.75 ).toFixed(2)}</span>
+                          <span className={styles.discountPrice}>${(Number(product.price) || 0).toFixed(2)}</span>
                           <span className={styles.badge}>25% OFF</span>
-                        </>
+                        </div>
                       ) : (
                         <>Price: $ {Number(product.price || 0).toFixed(2)}</>
                       )}
@@ -200,8 +221,9 @@ const Cart = () => {
                         styles={styles}
                         onIncrease={async () => {
                           const amount = 1
-                          const newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
-                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                          let newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
+                          newProducts = normalizeCartItems(newProducts)
+                          const newSubtotal = computeSubtotal(newProducts)
                           dispatch(updateQuantity({ index: idx, amount }))
                           try {
                             const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
@@ -212,10 +234,11 @@ const Cart = () => {
                         }}
                         onDecrease={async () => {
                           const amount = -1
-                          const newProducts = cart.products
+                          let newProducts = cart.products
                             .map((p, i) => (i === idx ? { ...p, quantity: Math.max(0, (Number(p.quantity) || 0) + amount) } : p))
                             .filter((p) => (Number(p.quantity) || 0) > 0)
-                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                          newProducts = normalizeCartItems(newProducts)
+                          const newSubtotal = computeSubtotal(newProducts)
                           dispatch(updateQuantity({ index: idx, amount }))
                           try {
                             const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
@@ -225,8 +248,9 @@ const Cart = () => {
                           try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
                         }}
                         onRemove={async () => {
-                          const newProducts = cart.products.filter((_, i) => i !== idx)
-                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                          let newProducts = cart.products.filter((_, i) => i !== idx)
+                          newProducts = normalizeCartItems(newProducts)
+                          const newSubtotal = computeSubtotal(newProducts)
                           dispatch(removeProduct(idx))
                           try {
                             const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null

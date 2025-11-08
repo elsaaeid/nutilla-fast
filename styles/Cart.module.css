@@ -12,8 +12,11 @@
 .imgContainer{
   position: relative;
 }
-/* table styles removed in favor of responsive card layout (.itemsList/.itemCard) */
-
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 /* item list (card) styles used on mobile and as an alternative to the table layout */
 .itemsList {
   display: flex;

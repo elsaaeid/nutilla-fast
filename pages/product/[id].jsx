@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, updateQuantity, removeProduct } from "../../redux/cartSlice";
 import axios from 'axios'
+import { normalizeCartItems, computeSubtotal } from '../../util/cartHelpers'
 import { FiShoppingCart } from 'react-icons/fi'
 import QtyControls from '../../components/QtyControls'
 
@@ -90,33 +91,38 @@ const Product = ({product}) => {
         // increment existing quantity
         dispatch(updateQuantity({ index: existingIndex, amount: Number(item.quantity) || 1 }))
         // persist
-        const newProducts = existing.map((p, i) => i === existingIndex ? { ...p, quantity: (Number(p.quantity) || 0) + (Number(item.quantity) || 1) } : p)
-        const subtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+  let newProducts = existing.map((p, i) => i === existingIndex ? { ...p, quantity: (Number(p.quantity) || 0) + (Number(item.quantity) || 1) } : p)
+  newProducts = normalizeCartItems(newProducts)
+  const subtotal = computeSubtotal(newProducts)
         const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
         axios.post('/api/cart', { items: newProducts, subtotal, cartId }).then((res) => { if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} } }).catch((e) => console.warn('persist cart fail', e?.message || e))
         try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-      } else {
-        dispatch(addProduct(item))
-        const newProducts = [...existing, item]
-        const subtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+  } else {
+    const [normalizedItem] = normalizeCartItems([item])
+    dispatch(addProduct(normalizedItem))
+  let newProducts = [...existing, normalizedItem]
+  newProducts = normalizeCartItems(newProducts)
+  const subtotal = computeSubtotal(newProducts)
         const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
         axios.post('/api/cart', { items: newProducts, subtotal, cartId }).then((res) => { if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} } }).catch((e) => console.warn('persist cart fail', e?.message || e))
-        try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+  try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
       }
       setInCartLocal(true)
     } catch (err) {
       // fallback simple add
-      dispatch(addProduct(item))
+      const [normalizedItem] = normalizeCartItems([item])
+      dispatch(addProduct(normalizedItem))
       setInCartLocal(true)
-      try { const existing = (cart && Array.isArray(cart.products)) ? cart.products : []; localStorage.setItem('cartItems', JSON.stringify([...existing, item])) } catch (e) {}
+  try { const existing = (cart && Array.isArray(cart.products)) ? cart.products : []; const merged = normalizeCartItems([...existing, normalizedItem]); localStorage.setItem('cartItems', JSON.stringify(merged)) } catch (e) {}
     }
   }
 
   const handleIncrease = async (index, amount = 1) => {
     dispatch(updateQuantity({ index, amount }))
     try {
-      const newProducts = cart.products.map((p, i) => (i === index ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
-      const subtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+      let newProducts = cart.products.map((p, i) => (i === index ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
+      newProducts = normalizeCartItems(newProducts)
+      const subtotal = computeSubtotal(newProducts)
       const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
       const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
       if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
@@ -127,13 +133,14 @@ const Product = ({product}) => {
   const handleDecrease = async (index, amount = -1) => {
     dispatch(updateQuantity({ index, amount }))
     try {
-      const newProducts = cart.products
+      let newProducts = cart.products
         .map((p, i) => (i === index ? { ...p, quantity: Math.max(0, (Number(p.quantity) || 0) + amount) } : p))
         .filter((p) => (Number(p.quantity) || 0) > 0)
-      const subtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+      newProducts = normalizeCartItems(newProducts)
+      const subtotal = computeSubtotal(newProducts)
       const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
       const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
-      if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+      if (res?.data && res.data._1) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
       try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
       if (newProducts.length === 0) setInCartLocal(false)
     } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
@@ -148,7 +155,7 @@ const Product = ({product}) => {
   const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
   if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
     } catch (e) { console.warn('Failed to persist cart after remove:', e?.message || e) }
-    try { localStorage.setItem('cartItems', JSON.stringify(cart.products.filter((_, i) => i !== index))) } catch (e) {}
+  try { localStorage.setItem('cartItems', JSON.stringify(normalizeCartItems(cart.products.filter((_, i) => i !== index)))) } catch (e) {}
     setInCartLocal(false)
   }
 
