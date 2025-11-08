@@ -14,7 +14,34 @@ const Navbar = () => {
   const [open, setOpen] = useState(false)
 
   const handleToggle = () => setOpen((s) => !s)
-  const quantity = useSelector((state) => state.cart.quantity)
+  const quantityFromStore = useSelector((state) => {
+    const prods = (state.cart && Array.isArray(state.cart.products)) ? state.cart.products : []
+    return prods.reduce((sum, p) => sum + (Number(p.quantity) || 0), 0)
+  })
+
+  // Keep a client-only fallback quantity (read from localStorage) but only after mount
+  const [clientQuantity, setClientQuantity] = React.useState(null)
+  React.useEffect(() => {
+    try {
+      if ((quantityFromStore || 0) === 0 && typeof window !== 'undefined') {
+        const raw = localStorage.getItem('cartItems')
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const q = parsed.reduce((s, p) => s + (Number(p.quantity) || 0), 0)
+            setClientQuantity(q)
+            return
+          }
+        }
+      }
+    } catch (e) {
+      // ignore localStorage errors
+    }
+    // otherwise clear clientQuantity to allow store value
+    setClientQuantity(null)
+  }, [quantityFromStore])
+
+  const quantity = clientQuantity ?? quantityFromStore
   const user = useCurrentUser()
   const router = useRouter()
 

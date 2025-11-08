@@ -58,12 +58,16 @@ export default async function handler(req, res) {
         } catch (e) {
           /* ignore enrichment errors */
         }
+        try { console.log('/api/cart GET by cartId:', cartId, 'items:', (serialized.items || []).length) } catch (e) {}
         return res.status(200).json(serialized)
       }
 
       if (!userId) return res.status(200).json({ items: [], subtotal: 0 })
       const cart = await Cart.findOne({ user: userId }).lean()
-      if (!cart) return res.status(200).json({ items: [], subtotal: 0 })
+      if (!cart) {
+        try { console.log('/api/cart GET for userId:', userId, 'no cart found') } catch (e) {}
+        return res.status(200).json({ items: [], subtotal: 0 })
+      }
       // serialize
       const serialized = {
         ...cart,
@@ -101,11 +105,20 @@ export default async function handler(req, res) {
       } catch (e) {
         /* ignore enrichment errors */
       }
-      return res.status(200).json(serialized)
+  try { console.log('/api/cart GET for userId:', userId, 'items:', (serialized.items || []).length) } catch (e) {}
+  return res.status(200).json(serialized)
     }
 
     if (method === 'POST') {
       let { items, subtotal } = req.body || {}
+
+      // Debug: log token/userId and incoming payload size to help diagnose merge-on-login
+      try {
+        const incomingCount = Array.isArray(items) ? items.length : items ? 1 : 0
+        console.log('/api/cart POST token:', token, 'userId:', userId, 'incoming items:', incomingCount)
+      } catch (e) {
+        /* ignore logging errors */
+      }
 
       // accept a non-array (single item) by coercing to array; keep empty array allowed
       if (!Array.isArray(items) && items != null) {

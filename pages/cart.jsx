@@ -74,33 +74,45 @@ const Cart = () => {
     // load server-side cart on mount (if any) and populate redux
     const load = async () => {
       try {
-  // Decide source: if user is logged in (token cookie present) load from server; otherwise use localStorage
-  const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-  const token = typeof window !== 'undefined' ? (document.cookie.match('(^|;)\\s*token\\s*=\\s*([^;]+)') ? document.cookie.match('(^|;)\\s*token\\s*=\\s*([^;]+)')[2] : null) : null
-  if (token) {
-    // logged-in: fetch server-side cart (may be an anonymous cartId or a user cart)
-    const res = await axios.get(`/api/cart${cartId ? `?cartId=${cartId}` : ''}`)
-    const data = res.data || {}
-    // server returns { items: [...], subtotal } or a serialized cart object with .items
-    const items = Array.isArray(data.items) ? data.items : []
-    const subtotal = typeof data.subtotal === 'number' ? data.subtotal : Number(data.subtotal) || 0
-    if (items.length > 0) {
-      dispatch(setCart({ items, subtotal }))
-    }
-  } else {
-    // not logged in: hydrate from localStorage (anonymous cart)
+    // Try loading cart from server first (server will use cookie to identify user).
+    // If server returns no items, fall back to anonymous localStorage cart.
+    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
     try {
-      const raw = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        const items = Array.isArray(parsed) ? normalizeCartItems(parsed) : []
-        const subtotal = computeSubtotal(items)
-        if (items.length > 0) dispatch(setCart({ items, subtotal }))
+      const res = await axios.get(`/api/cart${cartId ? `?cartId=${cartId}` : ''}`, { withCredentials: true })
+      const data = res.data || {}
+      console.log('loaded server cart:', data && (data.items || data.items === undefined ? data.items : data))
+      const items = Array.isArray(data.items) ? data.items : []
+      const subtotal = typeof data.subtotal === 'number' ? data.subtotal : Number(data.subtotal) || 0
+      if (items.length > 0) {
+        dispatch(setCart({ items, subtotal }))
+      } else {
+        // fallback to localStorage when server has no cart for this user
+        try {
+          const raw = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            const items = Array.isArray(parsed) ? normalizeCartItems(parsed) : []
+            const subtotal = computeSubtotal(items)
+            if (items.length > 0) dispatch(setCart({ items, subtotal }))
+          }
+        } catch (e) {
+          // ignore malformed localStorage
+        }
       }
     } catch (e) {
-      // ignore malformed localStorage
+      // If server call fails for any reason, fall back to localStorage
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          const items = Array.isArray(parsed) ? normalizeCartItems(parsed) : []
+          const subtotal = computeSubtotal(items)
+          if (items.length > 0) dispatch(setCart({ items, subtotal }))
+        }
+      } catch (err) {
+        // ignore malformed localStorage
+      }
     }
-  }
       } catch (e) {
         console.warn('Failed to load server cart:', e?.message || e)
       }
@@ -224,7 +236,7 @@ const Cart = () => {
                           dispatch(updateQuantity({ index: idx, amount }))
                           try {
                             const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId }, { withCredentials: true })
                             if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
                           } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
                           try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
@@ -239,7 +251,7 @@ const Cart = () => {
                           dispatch(updateQuantity({ index: idx, amount }))
                           try {
                             const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId }, { withCredentials: true })
                             if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
                           } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
                           try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
@@ -251,7 +263,7 @@ const Cart = () => {
                           dispatch(removeProduct(idx))
                           try {
                             const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId }, { withCredentials: true })
                             if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
                           } catch (e) { console.warn('Failed to persist cart after remove:', e?.message || e) }
                           try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
@@ -341,7 +353,7 @@ const Cart = () => {
                   // try to persist current cart before opening payment methods
                   try {
                     const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                    const res = await axios.post('/api/cart', { items: cart.products, subtotal: cart.total, cartId })
+                    const res = await axios.post('/api/cart', { items: cart.products, subtotal: cart.total, cartId }, { withCredentials: true })
                     if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
                   } catch (e) {
                     console.warn('Failed to persist cart on checkout click:', e?.message || e)
@@ -369,7 +381,7 @@ const Cart = () => {
                   dispatch(reset());
                   try {
                     const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                    const res = await axios.post('/api/cart', { items: [], subtotal: 0, cartId })
+                    const res = await axios.post('/api/cart', { items: [], subtotal: 0, cartId }, { withCredentials: true })
                     if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
                   } catch (e) {
                     console.warn('Failed to persist cart clear:', e?.message || e);

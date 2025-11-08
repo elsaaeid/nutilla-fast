@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import styles from '../../styles/Login.module.css'
 import { useToast } from '../../components/ToastContext'
+import { normalizeCartItems, computeSubtotal } from '../../util/cartHelpers'
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ username: '', password: '' })
@@ -23,12 +24,15 @@ export default function AdminLogin() {
 
     try {
       setLoading(true)
-      const res = await axios.post('/api/login', { username: form.username, password: form.password })
+      // ensure cookies set by server are accepted by the browser; withCredentials is safe for same-origin
+      const res = await axios.post('/api/login', { username: form.username, password: form.password }, { withCredentials: true })
       if (res.status === 200) {
         // successful login: API should set cookie or token
         // fetch /api/me to get role and redirect accordingly
         try {
-          const meRes = await fetch('/api/me')
+          // small delay to allow Set-Cookie to be processed by the browser in some environments
+          await new Promise((r) => setTimeout(r, 80))
+          const meRes = await fetch('/api/me', { credentials: 'same-origin' })
           const me = await meRes.json()
           // If there are anonymous cart items in localStorage, persist them to the server now
           try {
@@ -36,15 +40,34 @@ export default function AdminLogin() {
             if (raw) {
               const items = JSON.parse(raw)
               if (Array.isArray(items) && items.length > 0) {
-                // send items to /api/cart which will associate to the logged-in user via cookie
-                const subtotal = items.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                const mergeRes = await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items, subtotal }) })
-                if (mergeRes.ok) {
-                  const merged = await mergeRes.json()
-                  try { if (merged?._id) localStorage.setItem('cartId', merged._id) } catch (e) {}
-                  // clear anonymous cached items now that they've been merged
-                  try { localStorage.removeItem('cartItems') } catch (e) {}
-                  try { showToast('Your cart was merged', { duration: 3000 }) } catch (e) {}
+                // Normalize items client-side so server receives predictable fields (offer/originalPrice/etc)
+                const normalized = normalizeCartItems(items)
+                const subtotal = computeSubtotal(normalized)
+                // ensure cookies are sent and server can read the token set by /api/login
+                // Use axios withCredentials to ensure cookie/token is sent with the merge request
+                try {
+                  const mergeRes = await axios.post('/api/cart', { items: normalized, subtotal }, { withCredentials: true })
+                  const merged = mergeRes?.data
+                  // log merge result for debugging (visible in browser console)
+                  console.log('merge result:', merged)
+                  if (merged && merged._id) {
+                    try { localStorage.setItem('cartId', merged._id) } catch (e) {}
+                    // If server associated the cart with the user, merged.user should be set
+                    if (!merged.user) {
+                      // Informative toast: cart saved server-side but not associated with account
+                      showToast('Cart saved on server but not linked to your account', { duration: 4000 })
+                    } else {
+                      showToast('Your cart was merged', { duration: 3000 })
+                    }
+                    // clear anonymous cached items now that they've been merged
+                    try { localStorage.removeItem('cartItems') } catch (e) {}
+                  } else {
+                    console.warn('Merge responded without _id:', merged)
+                  }
+                } catch (mergeErr) {
+                  console.error('merge POST failed', mergeErr)
+                  // keep localStorage if merge failed; notify user
+                  try { showToast('Could not merge cart now — items kept locally', { duration: 4000 }) } catch (e) {}
                 }
               }
             }
