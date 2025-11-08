@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import style from '../styles/global.module.css'
+import style from '../styles/Order.module.css'
 
 export default function OrderDetail({ total, onCancel, createOrder }) {
   const [name, setName] = useState('')
@@ -28,12 +28,12 @@ export default function OrderDetail({ total, onCancel, createOrder }) {
     <div style={{ padding: 12, border: '1px solid #eee', borderRadius: 8, marginTop: 12 }}>
       <h3>Cash on Delivery</h3>
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 8 }}>
-        <label>
-          Full name
+        <label className={style.orderLabel}>
+          <span>Full name</span>
           <input className={style.input} value={name} onChange={(e) => setName(e.target.value)} />
         </label>
-        <label>
-          Address
+        <label className={style.orderLabel}>
+          <span>Address</span>
           <textarea className={style.textarea} value={address} onChange={(e) => setAddress(e.target.value)} />
         </label>
         <div style={{ display: 'flex', gap: 8 }}>
