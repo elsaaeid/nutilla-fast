@@ -66,21 +66,21 @@ const Order = ({ order }) => {
           <div className={styles.infoCard}>
             <div className={styles.infoRow}>
               <div className={styles.infoField}>
-                <div className={styles.infoLabel}>Order ID</div>
+                <div className={styles.infoLabel}>Order ID:</div>
                 <div className={styles.id}>{orderState._id}</div>
               </div>
               <div className={styles.infoField}>
-                <div className={styles.infoLabel}>Customer</div>
+                <div className={styles.infoLabel}>Customer:</div>
                 <div className={styles.name}>{orderState.customer}</div>
               </div>
             </div>
             <div className={styles.infoRow}>
               <div className={styles.infoField}>
-                <div className={styles.infoLabel}>Address</div>
+                <div className={styles.infoLabel}>Address:</div>
                 <div className={styles.address}>{orderState.address}</div>
               </div>
               <div className={styles.infoField}>
-                <div className={styles.infoLabel}>Total</div>
+                <div className={styles.infoLabel}>Total:</div>
                 <div className={styles.total}>${orderState.total}</div>
               </div>
             </div>
