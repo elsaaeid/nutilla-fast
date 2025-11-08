@@ -55,6 +55,30 @@
   font-weight: 600;
 }
 
+.oldPrice {
+  font-size: 1.2rem;
+  color: #777;
+  text-decoration: line-through;
+  margin-right: 8px;
+}
+
+.discountPrice {
+  font-size: 1.8rem;
+  color: #d22;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.badge {
+  display: inline-block;
+  background: #ffefc6;
+  color: #b85f00;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
 .desc {
   font-size: 1.1rem;
   line-height: 1.6;

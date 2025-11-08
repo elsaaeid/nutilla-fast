@@ -8,7 +8,17 @@ import axios from 'axios'
 
 
 const Product = ({product}) => {
-  const [price, setPrice] = useState(Array.isArray(product?.price) ? product.price[0] : (product?.price || 0));
+  // determine base price and whether product is on offer (coerce strings/numbers)
+  const base = Number(Array.isArray(product?.price) ? product.price[0] : (product?.price || 0)) || 0;
+  const isOffer = (() => {
+    const v = product?.offer;
+    if (typeof v === 'boolean') return v;
+    if (typeof v === 'string') return ['true', '1', 'yes'].includes(v.toLowerCase().trim());
+    if (typeof v === 'number') return v === 1;
+    return false;
+  })();
+  const discountedBase = Math.round(base * 0.75 * 100) / 100;
+  const [price, setPrice] = useState(isOffer ? discountedBase : base);
   const [quantity, setQuantity] = useState(1);
   const [extras, setExtras] = useState([]);
   const dispatch = useDispatch();
@@ -34,6 +44,7 @@ const Product = ({product}) => {
   };
 
   const handleClick = () => {
+    // price state already reflects discount (if any) and extras
     const item = { ...product, extras, price: Number(price) || 0, quantity: Number(quantity) || 1 }
     dispatch(addProduct(item));
     // persist updated cart (best-effort)
@@ -67,7 +78,15 @@ const Product = ({product}) => {
       </div>
       <div className={styles.right}>
         <h1 className={styles.title}>{product.title}</h1>
-        <span className={styles.price}>${Array.isArray(product.price) ? product.price[0] : product.price}</span>
+        {isOffer ? (
+          <div>
+            <span className={styles.oldPrice}>${base.toFixed(2)}</span>
+            <span className={styles.discountPrice}>${discountedBase.toFixed(2)}</span>
+            <span className={styles.badge}>25% OFF</span>
+          </div>
+        ) : (
+          <span className={styles.price}>${base.toFixed(2)}</span>
+        )}
         <p className={styles.desc}>{product.desc}</p>
         <h3 className={styles.choose}>Choose additional ingredients</h3>
         <div className={styles.ingredients}>
@@ -117,6 +136,13 @@ export const getServerSideProps = async ({ params }) => {
       _id: String(product._id),
       createdAt: product.createdAt ? product.createdAt.toISOString() : null,
       updatedAt: product.updatedAt ? product.updatedAt.toISOString() : null,
+      offer: (() => {
+        const v = product.offer
+        if (typeof v === 'boolean') return v
+        if (typeof v === 'string') return ['true', '1', 'yes'].includes(v.toLowerCase().trim())
+        if (typeof v === 'number') return v === 1
+        return false
+      })(),
     };
     return { props: { product: serialized } };
   } catch (err) {
