@@ -15,8 +15,10 @@ import OrderDetail from '../components/OrderDetail'
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
+  const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false);
   const [cash, setCash] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(null) // 'paypal' | 'cash' | null
   const amount = cart.total;
   const currency = "USD";
   const style = { layout: "vertical" };
@@ -28,7 +30,7 @@ const Cart = () => {
       // persist cart server-side for the current user (best-effort)
         try {
           const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-          const res = await axios.post('/api/cart', { items: cart.products, subtotal: cart.total, cartId })
+      const res = await axios.post('/api/cart', { items: cart.products, subtotal: cart.total, cartId })
           if (res?.data && res.data._id) {
             try { localStorage.setItem('cartId', res.data._id) } catch (e) {}
           }
@@ -66,6 +68,8 @@ const Cart = () => {
       }
     }
     load()
+    // client-only flag for PayPal script rendering
+    setMounted(true)
   }, [dispatch])
 
   // Custom component to wrap the PayPalButtons and handle currency changes
@@ -228,23 +232,68 @@ const Cart = () => {
             </div>
             {open ? (
               <div className={styles.paymentMethods}>
-                <button
-                  className={styles.payButton}
-                  onClick={() => setCash(true)}
-                >
-                  CASH ON DELIVERY
-                </button>
-                <PayPalScriptProvider
-                  options={{
-                    // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
-                    "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
-                    components: "buttons",
-                    currency: "USD",
-                    "disable-funding": "credit,card,p24",
-                  }}
-                >
-                  <ButtonWrapper currency={currency} showSpinner={false} />
-                </PayPalScriptProvider>
+                    <div className={styles.paymentOptions}>
+                      <label className={styles.paymentOption}>
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="cash"
+                          checked={paymentMethod === 'cash'}
+                          onChange={() => { setPaymentMethod('cash'); setCash(false) }}
+                        />
+                        Cash on Delivery
+                      </label>
+                      <label className={styles.paymentOption}>
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="paypal"
+                          checked={paymentMethod === 'paypal'}
+                          onChange={() => { setPaymentMethod('paypal'); setCash(false) }}
+                        />
+                        Pay Online (PayPal)
+                      </label>
+                    </div>
+
+                            {/* Keep the PayPal provider mounted while the payment panel is open so the SDK script
+                                stays loaded when users switch between methods. Only render the Buttons when
+                                PayPal is the selected method. */}
+                            {mounted && (
+                              <PayPalScriptProvider
+                                options={{
+                                  // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
+                                  "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
+                                  components: "buttons",
+                                  currency: "USD",
+                                  "disable-funding": "credit,card,p24",
+                                }}
+                              >
+                                {paymentMethod === 'paypal' && <ButtonWrapper currency={currency} showSpinner={false} />}
+                              </PayPalScriptProvider>
+                            )}
+                    {/* Render only the selected method's UI */}
+                    {paymentMethod === 'cash' && (
+                      <button
+                        className={styles.payButton}
+                        onClick={() => setCash(true)}
+                      >
+                        Proceed with Cash on Delivery
+                      </button>
+                    )}
+
+                    {paymentMethod === 'paypal' && (
+                      <PayPalScriptProvider
+                        options={{
+                          // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
+                          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
+                          components: "buttons",
+                          currency: "USD",
+                          "disable-funding": "credit,card,p24",
+                        }}
+                      >
+                        <ButtonWrapper currency={currency} showSpinner={false} />
+                      </PayPalScriptProvider>
+                    )}
               </div>
             ) : (
               <button
@@ -257,6 +306,8 @@ const Cart = () => {
                   } catch (e) {
                     console.warn('Failed to persist cart on checkout click:', e?.message || e)
                   }
+                  // default to PayPal when opening the payment panel to avoid transient empty state
+                  if (!paymentMethod) setPaymentMethod('paypal')
                   setOpen(true)
                 }}
                 className={styles.button}
