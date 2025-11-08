@@ -16,6 +16,11 @@
     border-radius: 8px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
   }
   .infoRow{
     display: flex;
@@ -23,6 +28,7 @@
     align-items: flex-start;
     flex-wrap: wrap;
     margin-bottom: 8px;
+    width: 100%;
   }
   .infoField{
     display: flex;
