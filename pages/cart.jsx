@@ -1,5 +1,4 @@
 import styles from "../styles/Cart.module.css";
-import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
@@ -186,12 +185,10 @@ const Cart = () => {
               <div className={styles.itemCard} key={product.cartItemId || product._id || product.productId || idx}>
                 <div className={styles.cardRow}>
                   <div className={styles.imgContainer}>
-                    <Image
+                    <img
                       src={product.img}
                       alt={product.title}
-                      width={104}
-                      height={72}
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'cover', width: 'max-content', height: '50px' }}
                     />
                   </div>
                   <div className={styles.cardContent}>
