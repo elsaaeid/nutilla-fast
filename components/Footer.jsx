@@ -21,7 +21,6 @@ const Footer = () => {
               1654 R. Don Road <span className={styles.highlight}></span>.
               <br /> NewYork, 85022
               <br /> (602) 867-1010
-              <br /> Giza
             </p>
           </div>
           <div className={styles.card}>
