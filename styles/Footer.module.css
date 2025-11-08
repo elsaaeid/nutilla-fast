@@ -28,7 +28,9 @@
 .nutilla{
     color: rgb(211, 211, 211);
 }
-
+.highlight {
+    color: #304;
+}
 @media screen and (max-width:768px) {
     .container{
         flex-direction: column;
