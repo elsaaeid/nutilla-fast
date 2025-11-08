@@ -63,32 +63,28 @@ const Order = ({ order }) => {
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.row}>
-          <table className={styles.table}>
-            <thead>
-              <tr className={styles.trTitle}>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Address</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className={styles.tr}>
-                <td>
-                  <span className={styles.id}>{orderState._id}</span>
-                </td>
-                <td>
-                  <span className={styles.name}>{orderState.customer}</span>
-                </td>
-                <td>
-                  <span className={styles.address}>{orderState.address}</span>
-                </td>
-                <td>
-                  <span className={styles.total}>${orderState.total}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className={styles.infoCard}>
+            <div className={styles.infoRow}>
+              <div className={styles.infoField}>
+                <div className={styles.infoLabel}>Order ID</div>
+                <div className={styles.id}>{orderState._id}</div>
+              </div>
+              <div className={styles.infoField}>
+                <div className={styles.infoLabel}>Customer</div>
+                <div className={styles.name}>{orderState.customer}</div>
+              </div>
+            </div>
+            <div className={styles.infoRow}>
+              <div className={styles.infoField}>
+                <div className={styles.infoLabel}>Address</div>
+                <div className={styles.address}>{orderState.address}</div>
+              </div>
+              <div className={styles.infoField}>
+                <div className={styles.infoLabel}>Total</div>
+                <div className={styles.total}>${orderState.total}</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className={styles.row}>
           <div className={statusClass(0)}>

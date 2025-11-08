@@ -8,19 +8,35 @@
   .right{
     flex: 1;
   }
-  .table{
-      width: 100%;
-      text-align: left;
-      margin-bottom: 50px;
-      border-collapse: collapse;
-      /* allow horizontal scroll on narrow viewports */
-      display: block;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+  /* info card replaces the table for clearer responsive layout */
+  .infoCard{
+    width: 100%;
+    background: #fff;
+    padding: 14px;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+  }
+  .infoRow{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .infoField{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .infoLabel{
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
   }
   /* nice cell padding and separators */
-  table .trTitle th,
-  table .tr td {
+  .trTitle th,
+  .tr td {
     padding: 12px 8px;
     border-bottom: 1px solid rgba(0,0,0,0.06);
   }
@@ -108,22 +124,6 @@
       color: #111;
       font-size: 16px;
     }
-    .id::before{
-      content: "Order Id:";
-      font-weight: 500;
-    }
-    .name::before{
-      content: "Customer:";
-      font-weight: 500;
-    }
-    .address::before{
-      content: "Address:";
-      font-weight: 500;
-    }    
-    .total::before{
-      content: "Total:";
-      font-weight: 500;
-    }
     .row:last-child{
       width: 100%;
       flex-direction: column;
@@ -141,6 +141,6 @@
 /* tablet breakpoint: allow horizontal scrolling but keep table headers visible */
 @media screen and (max-width:768px) and (min-width:481px) {
   .container{ padding: 30px; }
-  .table{ display: block; overflow-x: auto; }
+  /* table removed; infoCard is used instead */
   .trTitle th, .tr td { padding: 10px 6px; }
 }
