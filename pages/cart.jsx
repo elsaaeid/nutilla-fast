@@ -319,34 +319,32 @@ const Cart = () => {
                       </label>
                     </div>
 
-                    {/* Keep the PayPal provider mounted while the payment panel is open so the SDK script
-                        stays loaded when users switch between methods. Only render the Buttons when
-                        PayPal is the selected method. */}
-                    {mounted && (
-                      <div style={{ marginTop: 12 }}>
-                        <PayPalScriptProvider
-                          options={{
-                            // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
-                            "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
-                            components: "buttons",
-                            currency: "USD",
-                            "disable-funding": "credit,card,p24",
-                          }}
+                    <div  style={{ marginTop: 12, display: "flex", justifyContent: "center" }}>
+                      {mounted && (
+                        <div>
+                          <PayPalScriptProvider
+                            options={{
+                              // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
+                              "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
+                              components: "buttons",
+                              currency: "USD",
+                              "disable-funding": "credit,card,p24",
+                            }}
+                          >
+                            {paymentMethod === 'paypal' && <ButtonWrapper currency={currency} showSpinner={false} />}
+                          </PayPalScriptProvider>
+                        </div>
+                      )}
+                      {/* Render only the selected method's UI */}
+                      {paymentMethod === 'cash' && (
+                        <button
+                          className={styles.payButton}
+                          onClick={() => setCash(true)}
                         >
-                          {paymentMethod === 'paypal' && <ButtonWrapper currency={currency} showSpinner={false} />}
-                        </PayPalScriptProvider>
-                      </div>
-                    )}
-                    {/* Render only the selected method's UI */}
-                    {paymentMethod === 'cash' && (
-                      <button
-                        className={styles.payButton}
-                        onClick={() => setCash(true)}
-                      >
-                        Proceed with Cash on Delivery
-                      </button>
-                    )}
-
+                          Proceed with Cash on Delivery
+                        </button>
+                      )}
+                    </div>
                     {/* PayPal Buttons are rendered by the mounted provider above when paymentMethod === 'paypal'. */}
               </div>
             ) : (
