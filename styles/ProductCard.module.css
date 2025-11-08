@@ -90,6 +90,41 @@
   margin-left: 8px;
 }
 
+/* inline qty controls used when product is in cart */
+.qtyControlsInline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qtyBtn {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+}
+.removeBtn {
+  background: transparent;
+  border: none;
+  color: #c22;
+  cursor: pointer;
+  padding: 6px;
+}
+.quantity {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.disabledLink {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: not-allowed;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .desc {
   font-size: 0.9rem;
   color: #666;
