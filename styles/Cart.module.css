@@ -46,7 +46,7 @@
   flex-direction: column;
 }
 .itemCard {
-  background: #d3d3d3;
+  border: 1px solid #d4c6c6;
   border-radius: 8px;
   padding: 12px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.06);

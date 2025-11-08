@@ -2,10 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/cart": "pages/api/cart.js",
-  "/api/me": "pages/api/me.js",
-  "/admin/login": "pages/admin/login.js",
-  "/api/login": "pages/api/login.js",
-  "/admin": "pages/admin.js",
-  "/": "pages/index.js"
+  "/cart": "pages/cart.js"
 }
