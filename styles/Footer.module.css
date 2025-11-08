@@ -29,6 +29,7 @@
     color: rgb(211, 211, 211);
 }
 .highlight {
+    display: inline-block;
     width: 10px;
     height: 10px;
     background-color: rgb(182, 29, 233);
