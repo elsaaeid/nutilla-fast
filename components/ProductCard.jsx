@@ -57,7 +57,7 @@ const ProductCard = ({ product }) => {
     const basePrice = Number(rawPrice) || 0
     const isOffer = !!product?.offer
     const priceForCart = isOffer ? Math.round(basePrice * 0.75 * 100) / 100 : basePrice
-    const item = { ...product, price: Number(priceForCart) || 0, quantity: 1, extras: [] }
+  const item = { ...product, price: Number(priceForCart) || 0, originalPrice: basePrice || null, offer: isOffer, quantity: 1, extras: [] }
     // decide whether item already exists in cart (same id + extras)
     try {
       const existing = (cart && Array.isArray(cart.products)) ? [...cart.products] : []

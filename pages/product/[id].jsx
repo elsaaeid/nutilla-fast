@@ -81,7 +81,7 @@ const Product = ({product}) => {
   };
 
   const handleAddToCart = async () => {
-    const item = { ...product, extras, price: Number(price) || 0, quantity: Number(quantity) || 1 }
+    const item = { ...product, extras, price: Number(price) || 0, originalPrice: base || null, offer: isOffer, quantity: Number(quantity) || 1 }
     try {
       const existing = (cart && Array.isArray(cart.products)) ? [...cart.products] : []
       const key = makeKey(item)

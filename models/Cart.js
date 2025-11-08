@@ -11,6 +11,9 @@ const CartItemSchema = new mongoose.Schema({
   title: { type: String },
   img: { type: String },
   price: { type: Number, required: true },
+  // keep whether this item was an offer (discounted) and optionally the original price
+  offer: { type: Boolean, default: false },
+  originalPrice: { type: Number, required: false },
   quantity: { type: Number, default: 1 },
   extras: { type: [ExtraSchema], default: [] },
 }, { _id: false })

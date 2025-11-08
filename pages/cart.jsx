@@ -25,6 +25,25 @@ const Cart = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  // Compute totals outside of JSX to avoid inline IIFE parsing issues
+  const subtotalDiscounted = Number(cart.total) || 0;
+  const originalTotal = (cart.products || []).reduce((acc, p) => {
+    const qty = Number(p.quantity) || 1;
+    const price = Number(p.price) || 0;
+    // prefer an explicit originalPrice if the item stored it
+    const hasOriginal = typeof p.originalPrice !== 'undefined' && p.originalPrice !== null && p.originalPrice !== '';
+    const parseOfferLocal = (v) => {
+      if (typeof v === 'boolean') return v;
+      if (typeof v === 'string') return ['true', '1', 'yes'].includes(v.toLowerCase().trim());
+      if (typeof v === 'number') return v === 1;
+      return false;
+    }
+    const isOffer = parseOfferLocal(p?.offer)
+    const origPrice = hasOriginal ? Number(p.originalPrice) : (isOffer ? (price / 0.75) : price)
+    return acc + (Number(origPrice) || 0) * qty;
+  }, 0);
+  const discountTotal = Math.max(0, originalTotal - subtotalDiscounted);
+
   const createOrder = async (data) => {
     try {
       // persist cart server-side for the current user (best-effort)
@@ -159,7 +178,17 @@ const Cart = () => {
                     {product.extras && product.extras.length > 0 && (
                       <div className={styles.extras}>{product.extras.map(e => e.text).join(', ')}</div>
                     )}
-                    <div className={styles.price}>Price: ${product.price}</div>
+                    <div className={styles.price}>
+                      {product?.offer ? (
+                        <>
+                          <span className={styles.oldPrice}>$ {( (Number(product.price) || 0) / 0.75 ).toFixed(2)}</span>
+                          <span className={styles.discountPrice}>$ {(Number(product.price) || 0).toFixed(2)}</span>
+                          <span className={styles.badge}>25% OFF</span>
+                        </>
+                      ) : (
+                        <>Price: $ {Number(product.price || 0).toFixed(2)}</>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -209,7 +238,7 @@ const Cart = () => {
                       />
                     </div>
 
-                    <div className={styles.total}>Total: ${product.price * product.quantity}</div>
+                    <div className={styles.total}>Total: $ {(Number(product.price) * Number(product.quantity)).toFixed(2)}</div>
                   </div>
                 </div>
               </div>
@@ -221,15 +250,17 @@ const Cart = () => {
         <div className={styles.right}>
           <div className={styles.wrapper}>
             <h2 className={styles.title}>CART TOTAL</h2>
-            <div className={styles.totalText}>
-              <b className={styles.totalTextTitle}>Subtotal:</b>${cart.total}
-            </div>
-            <div className={styles.totalText}>
-              <b className={styles.totalTextTitle}>Discount:</b>$0.00
-            </div>
-            <div className={styles.totalText}>
-              <b className={styles.totalTextTitle}>Total:</b>${cart.total}
-            </div>
+            <>
+              <div className={styles.totalText}>
+                <b className={styles.totalTextTitle}>Subtotal:</b> $ {Number(originalTotal || 0).toFixed(2)}
+              </div>
+              <div className={styles.totalText}>
+                <b className={styles.totalTextTitle}>Discount:</b> -$ {Number(discountTotal || 0).toFixed(2)}
+              </div>
+              <div className={styles.totalText}>
+                <b className={styles.totalTextTitle}>Total:</b> $ {Number(subtotalDiscounted || 0).toFixed(2)}
+              </div>
+            </>
             {open ? (
               <div className={styles.paymentMethods}>
                     <div className={styles.paymentOptions}>
@@ -255,22 +286,22 @@ const Cart = () => {
                       </label>
                     </div>
 
-                            {/* Keep the PayPal provider mounted while the payment panel is open so the SDK script
-                                stays loaded when users switch between methods. Only render the Buttons when
-                                PayPal is the selected method. */}
-                            {mounted && (
-                              <PayPalScriptProvider
-                                options={{
-                                  // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
-                                  "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
-                                  components: "buttons",
-                                  currency: "USD",
-                                  "disable-funding": "credit,card,p24",
-                                }}
-                              >
-                                {paymentMethod === 'paypal' && <ButtonWrapper currency={currency} showSpinner={false} />}
-                              </PayPalScriptProvider>
-                            )}
+                    {/* Keep the PayPal provider mounted while the payment panel is open so the SDK script
+                        stays loaded when users switch between methods. Only render the Buttons when
+                        PayPal is the selected method. */}
+                    {mounted && (
+                      <PayPalScriptProvider
+                        options={{
+                          // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
+                          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
+                          components: "buttons",
+                          currency: "USD",
+                          "disable-funding": "credit,card,p24",
+                        }}
+                      >
+                        {paymentMethod === 'paypal' && <ButtonWrapper currency={currency} showSpinner={false} />}
+                      </PayPalScriptProvider>
+                    )}
                     {/* Render only the selected method's UI */}
                     {paymentMethod === 'cash' && (
                       <button

@@ -28,6 +28,36 @@ export default async function handler(req, res) {
           createdAt: cart.createdAt ? cart.createdAt.toISOString() : null,
           updatedAt: cart.updatedAt ? cart.updatedAt.toISOString() : null,
         }
+        // If stored items lack offer/originalPrice, try to enrich them from Product collection
+        try {
+          const Product = require('../../../models/Product')
+          if (Array.isArray(serialized.items) && serialized.items.length > 0) {
+            for (let i = 0; i < serialized.items.length; i++) {
+              const it = serialized.items[i]
+              if (it && it.productId && (!('offer' in it) || !('originalPrice' in it))) {
+                try {
+                  const prod = await Product.findById(it.productId).lean()
+                  if (prod) {
+                    // derive original price from product price field
+                    const base = Array.isArray(prod.price) ? prod.price[0] : prod.price
+                    serialized.items[i].offer = (() => {
+                      const v = prod.offer
+                      if (typeof v === 'boolean') return v
+                      if (typeof v === 'string') return ['true','1','yes'].includes(v.toLowerCase().trim())
+                      if (typeof v === 'number') return v === 1
+                      return false
+                    })()
+                    serialized.items[i].originalPrice = typeof base !== 'undefined' && base !== null ? Number(base) || null : null
+                  }
+                } catch (e) {
+                  /* ignore per-item enrich errors */
+                }
+              }
+            }
+          }
+        } catch (e) {
+          /* ignore enrichment errors */
+        }
         return res.status(200).json(serialized)
       }
 
@@ -41,6 +71,35 @@ export default async function handler(req, res) {
         user: cart.user ? String(cart.user) : null,
         createdAt: cart.createdAt ? cart.createdAt.toISOString() : null,
         updatedAt: cart.updatedAt ? cart.updatedAt.toISOString() : null,
+      }
+      // Enrich items missing offer/originalPrice from Product collection when possible
+      try {
+        const Product = require('../../../models/Product')
+        if (Array.isArray(serialized.items) && serialized.items.length > 0) {
+          for (let i = 0; i < serialized.items.length; i++) {
+            const it = serialized.items[i]
+            if (it && it.productId && (!('offer' in it) || !('originalPrice' in it))) {
+              try {
+                const prod = await Product.findById(it.productId).lean()
+                if (prod) {
+                  const base = Array.isArray(prod.price) ? prod.price[0] : prod.price
+                  serialized.items[i].offer = (() => {
+                    const v = prod.offer
+                    if (typeof v === 'boolean') return v
+                    if (typeof v === 'string') return ['true','1','yes'].includes(v.toLowerCase().trim())
+                    if (typeof v === 'number') return v === 1
+                    return false
+                  })()
+                  serialized.items[i].originalPrice = typeof base !== 'undefined' && base !== null ? Number(base) || null : null
+                }
+              } catch (e) {
+                /* ignore per-item enrich errors */
+              }
+            }
+          }
+        }
+      } catch (e) {
+        /* ignore enrichment errors */
       }
       return res.status(200).json(serialized)
     }
@@ -66,6 +125,13 @@ export default async function handler(req, res) {
         return cleaned
       }
 
+      const parseOffer = (v) => {
+        if (typeof v === 'boolean') return v
+        if (typeof v === 'string') return ['true', '1', 'yes'].includes(v.toLowerCase().trim())
+        if (typeof v === 'number') return v === 1
+        return false
+      }
+
       const normalized = Array.isArray(items)
         ? items.map((it) => {
             const extras = normalizeExtras(it.extras)
@@ -85,6 +151,9 @@ export default async function handler(req, res) {
               price: Number(it.price) || 0,
               quantity: Number(it.quantity) || 1,
               extras,
+              // preserve whether client flagged this as an offer and original price if provided
+              offer: parseOffer(it.offer),
+              originalPrice: typeof it.originalPrice !== 'undefined' ? Number(it.originalPrice) || null : null,
             }
           })
         : []
@@ -129,13 +198,16 @@ export default async function handler(req, res) {
                 map.set(key, { ...ex })
               })
 
-              normalized.forEach((inc) => {
+                  normalized.forEach((inc) => {
                 const key = itemKey(inc)
                 const found = map.get(key)
                 if (found) {
                   // sum quantities and prefer incoming price/title/img
                   found.quantity = (Number(found.quantity) || 0) + (Number(inc.quantity) || 0)
                   found.price = Number(inc.price) || Number(found.price) || 0
+                  // preserve offer/originalPrice where incoming provides it
+                  found.offer = (typeof inc.offer !== 'undefined') ? !!inc.offer : !!found.offer
+                  found.originalPrice = typeof inc.originalPrice !== 'undefined' ? inc.originalPrice || found.originalPrice : found.originalPrice
                   found.title = inc.title || found.title
                   found.img = inc.img || found.img
                   found.extras = inc.extras || found.extras
