@@ -157,8 +157,8 @@ const Cart = () => {
                       <Image
                         src={product.img}
                         alt={product.title}
-                        width={80}
-                        height={80}
+                        width={45}
+                        height={43}
                         style={{ objectFit: 'cover' }}
                       />
                     </div>
