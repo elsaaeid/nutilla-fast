@@ -17,6 +17,29 @@
   align-items: center;
   gap: 10px;
 }
+/* price visuals: struck original price and highlighted discounted price */
+.priceContainer .oldPrice {
+  color: #777;
+  text-decoration: line-through;
+  font-size: 0.95rem;
+}
+.priceContainer .discountPrice {
+  background: #d1411e;
+  color: #fff;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.priceContainer .badge {
+  display: inline-block;
+  background: #ffefc6;
+  color: #b85f00;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
 /* item list (card) styles used on mobile and as an alternative to the table layout */
 .itemsList {
   display: flex;
