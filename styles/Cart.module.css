@@ -8,8 +8,6 @@
   flex: 1;
 }
 .imgContainer{
-  width: 100px;
-  height: 100px;
   position: relative;
 }
 .table{
@@ -112,7 +110,6 @@
   .container{ padding: 30px; }
   .table{ display: block; overflow-x: auto; }
   .trTitle th, .tr td { padding: 10px 8px; }
-  .imgContainer{ width: 80px; height: 80px; }
 }
 
 

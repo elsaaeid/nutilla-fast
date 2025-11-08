@@ -141,7 +141,8 @@ const Cart = () => {
               <tr className={styles.trTitle}>
             <th>Product</th>
             <th>Name</th>
-            <th>Extras</th>
+            {/* Show Extras column only if at least one product has extras */}
+            {cart.products && cart.products.some(p => p.extras && p.extras.length > 0) && <th>Extras</th>}
             <th>Price</th>
             <th>Quantity</th>
             <th>Total</th>
@@ -165,13 +166,15 @@ const Cart = () => {
                   <td>
                     <span className={styles.name}>{product.title}</span>
                   </td>
-                  <td>
-                    <span className={styles.extras}>
-                      {product.extras && product.extras.length > 0
-                        ? product.extras.map((e) => e.text).join(', ')
-                        : '—'}
-                    </span>
-                  </td>
+                  {cart.products && cart.products.some(p => p.extras && p.extras.length > 0) && (
+                    <td>
+                      <span className={styles.extras}>
+                        {product.extras && product.extras.length > 0
+                          ? product.extras.map((e) => e.text).join(', ')
+                          : null}
+                      </span>
+                    </td>
+                  )}
                   <td>
                     <span className={styles.price}>${product.price}</span>
                   </td>
