@@ -32,6 +32,17 @@ const Order = ({ order }) => {
     }
   };
 
+  // feedback for cash-on-delivery customers
+  const succefullCODToast = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        window.alert('Wait admin to check order');
+      } catch (e) {
+        console.log('Wait admin to check order');
+      }
+    }
+  };
+
   const handleStatus = async () => {
     if (!isAdmin) return;
     if (orderState.status >= 3) return;
@@ -171,7 +182,7 @@ const Order = ({ order }) => {
               PAID
             </button>
           ) : orderState.method === 0 ? (
-            <button disabled className={styles.button}>
+            <button onClick={succefullCODToast} className={styles.button}>
               CASH ON DELIVERY
             </button>
           ) : (
