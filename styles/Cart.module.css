@@ -87,10 +87,6 @@
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   }
-  .imgContainer{
-    width: 35vw;
-    height: 35vw;
-  }
   .name, .total{
     font-size: 12px;
   }
