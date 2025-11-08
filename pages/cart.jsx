@@ -312,19 +312,7 @@ const Cart = () => {
                       </button>
                     )}
 
-                    {paymentMethod === 'paypal' && (
-                      <PayPalScriptProvider
-                        options={{
-                          // Use NEXT_PUBLIC_PAYPAL_CLIENT_ID for client-side access; fallback to 'sb' (sandbox)
-                          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb',
-                          components: "buttons",
-                          currency: "USD",
-                          "disable-funding": "credit,card,p24",
-                        }}
-                      >
-                        <ButtonWrapper currency={currency} showSpinner={false} />
-                      </PayPalScriptProvider>
-                    )}
+                    {/* PayPal Buttons are rendered by the mounted provider above when paymentMethod === 'paypal'. */}
               </div>
             ) : (
               <button
