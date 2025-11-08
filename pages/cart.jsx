@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import { reset, removeProduct, setCart, updateQuantity } from "../redux/cartSlice";
+import OrderDetail from '../components/OrderDetail'
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -302,6 +303,13 @@ const Cart = () => {
               >
                 CHECKOUT NOW!
               </button>
+            )}
+            {cash && (
+              <OrderDetail
+                total={cart.total}
+                onCancel={() => setCash(false)}
+                createOrder={createOrder}
+              />
             )}
             <div style={{ marginTop: 12 }}>
               <button
