@@ -183,7 +183,7 @@ const Cart = () => {
         ) : (
           <div className={styles.itemsList}>
             {cart.products.map((product, idx) => (
-              <div className={styles.itemCard} key={product._id || idx}>
+              <div className={styles.itemCard} key={product.cartItemId || product._id || product.productId || idx}>
                 <div className={styles.cardRow}>
                   <div className={styles.imgContainer}>
                     <Image

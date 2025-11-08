@@ -22,6 +22,12 @@ export function normalizeCartItems(items = []) {
     // coerce numeric fields
     item.price = Number(item.price) || 0
     item.quantity = Number(item.quantity) || 1
+    // ensure a stable cart item id so UI can key and update items reliably
+    if (!item.cartItemId) {
+      // prefer existing productId/_id to keep stability, fall back to random+timestamp
+      const baseId = item.productId || item._id || (item.title || '').replace(/\s+/g, '_') || Math.random().toString(36).slice(2)
+      item.cartItemId = `${String(baseId)}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`
+    }
     return item
   })
 }
