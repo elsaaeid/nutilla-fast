@@ -14,8 +14,11 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch()
   const cart = useSelector((state) => state.cart)
   const handleAddToCart = () => {
-    const price = Array.isArray(product.price) ? product.price[0] : product.price
-    const item = { ...product, price: Number(price) || 0, quantity: 1, extras: [] }
+    const rawPrice = Array.isArray(product.price) ? product.price[0] : product.price
+    const basePrice = Number(rawPrice) || 0
+    const isOffer = !!product?.offer
+    const priceForCart = isOffer ? Math.round(basePrice * 0.75 * 100) / 100 : basePrice
+    const item = { ...product, price: Number(priceForCart) || 0, quantity: 1, extras: [] }
     // optimistic update to redux
     dispatch(addProduct(item))
     // persist cart (best-effort): post new array including this item
@@ -59,9 +62,15 @@ const ProductCard = ({ product }) => {
 
       <div className={styles.content}>
         <h2 className={styles.title}>{product.title}</h2>
-        <span className={styles.price}>
-          ${Array.isArray(product.price) ? product.price[0] : product.price}
-        </span>
+        {product?.offer ? (
+          <div>
+            <span className={styles.oldPrice}>${(Number(Array.isArray(product.price) ? product.price[0] : product.price) || 0).toFixed(2)}</span>
+            <span className={styles.discountPrice}>${(Math.round((Number(Array.isArray(product.price) ? product.price[0] : product.price) || 0) * 0.75 * 100) / 100).toFixed(2)}</span>
+            <span className={styles.badge}>25% OFF</span>
+          </div>
+        ) : (
+          <span className={styles.price}>${(Number(Array.isArray(product.price) ? product.price[0] : product.price) || 0).toFixed(2)}</span>
+        )}
         <div className={styles.actions}>
           <Link className={style.linkContainer} href={`/product/${product._id}`} passHref>
             View Details

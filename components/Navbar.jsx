@@ -55,8 +55,8 @@ const Navbar = () => {
           <li className={`${styles.listItem} ${isActive('/') ? styles.active : ''}`} onClick={() => setOpen(false)}>
             <Link href="/">Home</Link>
           </li>
-          <li className={`${styles.listItem} ${isActive('/products') ? styles.active : ''}`} onClick={() => setOpen(false)}>
-            <Link href="/products">Products</Link>
+          <li className={`${styles.listItem} ${isActive('/menus') ? styles.active : ''}`} onClick={() => setOpen(false)}>
+            <Link href="/menus">Menus</Link>
           </li>
           <ShowOnLogout>
             <li className={`${styles.listItem} ${isActive('/admin/login') ? styles.active : ''}`} onClick={() => setOpen(false)}>

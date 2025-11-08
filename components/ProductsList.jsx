@@ -5,14 +5,19 @@ import ProductCard from "./ProductCard";
 
 
 
-const ProductsList = ({ productsList = [] }) => {
+const ProductsList = ({ productsList = [], productTitle, productDesc }) => {
   // Defensive rendering and helpful debug output when no products are present.
   const hasProducts = Array.isArray(productsList) && productsList.length > 0
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Half Moon</h1>
-      <p className={styles.desc}>Rounded waffle with nutella sauce</p>
+      <h1 className={styles.title}>
+        {productTitle}
+      </h1>
+
+      <p className={styles.desc}>
+        {productDesc}
+      </p>
 
       {!hasProducts ? (
         <div style={{ padding: 24 }}>

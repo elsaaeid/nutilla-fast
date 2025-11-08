@@ -10,6 +10,7 @@ const Add = ({ setClose }) => {
   const [prices, setPrices] = useState([]);
   const [extraOptions, setExtraOptions] = useState([]);
   const [extra, setExtra] = useState(null);
+  const [offer, setOffer] = useState(false);
 
   const changePrice = (e, index) => {
     const currentPrices = [...prices];
@@ -52,6 +53,7 @@ const Add = ({ setClose }) => {
         // but server's schema may ignore unknown fields. Keep it for future schema updates.
         extraOptions,
         img: url,
+        offer,
       };
 
   // use a relative path so the browser will include same-origin cookies
@@ -149,6 +151,12 @@ const Add = ({ setClose }) => {
               </span>
             ))}
           </div>
+        </div>
+        <div className={styles.item}>
+          <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input type="checkbox" checked={offer} onChange={(e) => setOffer(e.target.checked)} />
+            <span style={{ marginLeft: 6 }}>Mark as offer</span>
+          </label>
         </div>
         <button className={styles.addButton} onClick={handleCreate}>
           Create

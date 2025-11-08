@@ -11,13 +11,18 @@ export default function Home({ productsList }) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>nutella Restaurant</title>
+        <title>Nutella Restaurant</title>
         <meta name="description" content="Best nutella shop in town" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
       <Featured />
       {<AddButton setClose={setClose} />}
-      <ProductsList productsList={productsList} />
+      {/* On the home page show products that are currently on offer only */}
+      <ProductsList
+        productsList={(productsList && productsList.filter(p => p.offer)) || []}
+        productTitle="Special Offers"
+        productDesc="Products currently on offer — available for a limited time."
+      />
       {!close && <Add setClose={setClose} />}
     </div>
   );
@@ -43,6 +48,16 @@ export const getServerSideProps = async (ctx) => {
         _id: String(p._id),
         createdAt: p.createdAt ? p.createdAt.toISOString() : null,
         updatedAt: p.updatedAt ? p.updatedAt.toISOString() : null,
+        // Coerce legacy or incorrectly-typed `offer` values to boolean.
+        offer: (() => {
+          if (typeof p.offer === 'boolean') return p.offer
+          if (typeof p.offer === 'string') {
+            const v = p.offer.toLowerCase().trim()
+            return v === 'true' || v === '1' || v === 'yes'
+          }
+          if (typeof p.offer === 'number') return p.offer === 1
+          return false
+        })(),
       }
     });
     return { props: { productsList } };

@@ -2,10 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/order/[id]": "pages/order/[id].js",
-  "/profile": "pages/profile.js",
-  "/api/me": "pages/api/me.js",
-  "/api/logout": "pages/api/logout.js",
-  "/admin/login": "pages/admin/login.js",
-  "/": "pages/index.js"
+  "/": "pages/index.js",
+  "/menus": "pages/menus.js",
+  "/product/[id]": "pages/product/[id].js"
 }

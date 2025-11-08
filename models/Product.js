@@ -20,6 +20,11 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       maxlength: 200,
     }
+    ,
+    offer: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

@@ -10,7 +10,7 @@ export default function EditProductPage() {
   const { id } = router.query || {}
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState({ title: '', desc: '', price: '', img: '' })
+  const [form, setForm] = useState({ title: '', desc: '', price: '', img: '', offer: false })
   const [file, setFile] = useState(null)
   const { showToast } = useToast()
 
@@ -28,6 +28,7 @@ export default function EditProductPage() {
           desc: data.desc || '',
           price: Array.isArray(data.price) ? String(data.price[0] || '') : String(data.price || ''),
           img: data.img || '',
+          offer: typeof data.offer === 'boolean' ? data.offer : false,
         })
       })
       .catch((err) => console.warn('fetch product failed', err?.message || err))
@@ -36,6 +37,8 @@ export default function EditProductPage() {
   }, [id])
 
   const handleChange = (e) => setForm((s) => ({ ...s, [e.target.name]: e.target.value }))
+
+  const handleCheckbox = (e) => setForm((s) => ({ ...s, [e.target.name]: e.target.checked }))
 
   const handleSubmit = async (e) => {
     e?.preventDefault?.()
@@ -65,7 +68,8 @@ export default function EditProductPage() {
         title: form.title,
         desc: form.desc,
         img: imgUrl,
-        price: [Number(form.price) || 0]
+        price: [Number(form.price) || 0],
+        offer: !!form.offer,
       }
 
       const res = await axios.put(`/api/products/${id}`, body)
@@ -116,6 +120,11 @@ export default function EditProductPage() {
               <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className={style.input} />
             </label>
 
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input type="checkbox" name="offer" checked={!!form.offer} onChange={handleCheckbox} />
+              <span>Mark as offer</span>
+            </label>
+
             <div style={{ display: 'flex', gap: 8 }}>
               <button className={style.button} type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save'}</button>
               <button type="button" className={style.button} onClick={() => router.back()}>Cancel</button>
@@ -126,3 +135,4 @@ export default function EditProductPage() {
     </AdminAuthorLink>
   )
 }
+
