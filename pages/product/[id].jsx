@@ -218,7 +218,7 @@ const Product = ({product}) => {
             if (q === 1) {
               return (
                 <div className={styles.qtyControlsInline}>
-                  <span className={styles.quantity}>{q}</span>
+                  <span className={styles.qtyNumber}>{q}</span>
                   <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
                     <FiPlus />
                   </button>
@@ -233,7 +233,7 @@ const Product = ({product}) => {
                 <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleDecrease(idx)} aria-label="Decrease">
                   <FiMinus />
                 </button>
-                <span className={styles.quantity}>{q}</span>
+                <span className={styles.qtyNumber}>{q}</span>
                 <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
                   <FiPlus />
                 </button>
