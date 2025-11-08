@@ -17,7 +17,9 @@ const ProductCard = ({ product }) => {
   const makeKey = (p) => {
     if (!p) return ''
     const id = p._id || p.productId || ''
-    const extras = Array.isArray(p.extras) ? JSON.stringify(p.extras) : ''
+    // normalize extras: missing extras should be treated the same as an empty array
+    const extrasArr = Array.isArray(p.extras) ? p.extras : []
+    const extras = JSON.stringify(extrasArr)
     return `${String(id)}|${extras}`
   }
   const findIndexInCart = (prod) => {
@@ -28,7 +30,23 @@ const ProductCard = ({ product }) => {
 
   useEffect(() => {
     try {
-      setInCartLocal(findIndexInCart(product) !== -1)
+      const inRedux = findIndexInCart(product) !== -1
+      let inLS = false
+      if (typeof window !== 'undefined') {
+        try {
+          const raw = localStorage.getItem('cartItems')
+          if (raw) {
+            const items = JSON.parse(raw)
+            if (Array.isArray(items)) {
+              const key = makeKey(product)
+              inLS = items.some((p) => makeKey(p) === key)
+            }
+          }
+        } catch (e) {
+          inLS = false
+        }
+      }
+      setInCartLocal(inRedux || inLS)
     } catch (e) {
       setInCartLocal(false)
     }
@@ -141,31 +159,16 @@ const ProductCard = ({ product }) => {
           <span className={styles.price}>${(Number(Array.isArray(product.price) ? product.price[0] : product.price) || 0).toFixed(2)}</span>
         )}
         <div className={styles.actions}>
-          {/* disable other actions when product is already in cart */}
-          {(() => {
-            const isInCart = inCartLocal
-            if (!isInCart) {
-              return (
-                <>
-                  <Link className={style.linkContainer} href={`/product/${product._id}`} passHref>
-                    View Details
-                  </Link>
-                  <AdminAuthorLink>
-                    <Link href={`/admin/edit-product/${product._id}`} className={style.button} title="Edit product">
-                      <FiEdit size={16} />
-                    </Link>
-                  </AdminAuthorLink>
-                </>
-              )
-            }
-            // when in cart, show disabled placeholders to avoid navigation/actions
-            return (
-              <>
-                <span className={styles.disabledLink}>View Details</span>
-                <span className={styles.disabledLink} title="Edit product"><FiEdit size={16} /></span>
-              </>
-            )
-          })()}
+          <>
+            <Link className={style.linkContainer} href={`/product/${product._id}`} passHref>
+              View Details
+            </Link>
+            <AdminAuthorLink>
+              <Link href={`/admin/edit-product/${product._id}`} className={style.button} title="Edit product">
+                <FiEdit size={16} />
+              </Link>
+            </AdminAuthorLink>
+          </>
           {/* show add button when product not in cart; otherwise show qty controls and remove */}
           {(() => {
             const isInCart = inCartLocal
@@ -176,20 +179,34 @@ const ProductCard = ({ product }) => {
                 </button>
               )
             }
-            // product is in cart (optimistic). try to locate real index in redux; if not present yet, show optimistic controls
+            // Option 3: when in cart
+            // - qty === 1: show Increase and Trash (no Decrease)
+            // - qty > 1: show Decrease and Increase (no Trash)
             const idx = findIndexInCart(product)
             const cartItem = idx === -1 ? { quantity: 1 } : cart.products[idx]
+            const q = Number(cartItem.quantity) || 1
+            if (q === 1) {
+              return (
+                <div className={styles.qtyControlsInline}>
+                  <span className={styles.quantity}>{q}</span>
+                  <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
+                    <FiPlus />
+                  </button>
+                  <button className={styles.removeBtn} onClick={() => idx === -1 ? setInCartLocal(false) : handleRemoveFromCart(idx)} aria-label="Remove">
+                    <FiTrash />
+                  </button>
+                </div>
+              )
+            }
+            // q > 1
             return (
               <div className={styles.qtyControlsInline}>
                 <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleDecrease(idx)} aria-label="Decrease">
                   <FiMinus />
                 </button>
-                <span className={styles.quantity}>{cartItem.quantity}</span>
+                <span className={styles.quantity}>{q}</span>
                 <button className={styles.qtyBtn} onClick={() => idx === -1 ? null : handleIncrease(idx)} aria-label="Increase">
                   <FiPlus />
-                </button>
-                <button className={styles.removeBtn} onClick={() => idx === -1 ? (setInCartLocal(false)) : handleRemoveFromCart(idx)} aria-label="Remove">
-                  <FiTrash />
                 </button>
               </div>
             )

@@ -2,8 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/menus": "pages/menus.js",
-  "/cart": "pages/cart.js",
   "/api/cart": "pages/api/cart.js",
-  "/api/me": "pages/api/me.js"
+  "/product/[id]": "pages/product/[id].js",
+  "/menus": "pages/menus.js"
 }
