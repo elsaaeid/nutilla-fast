@@ -112,7 +112,10 @@ const Product = ({product}) => {
   const subtotal = computeSubtotal(newProducts)
         const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
         axios.post('/api/cart', { items: newProducts, subtotal, cartId }).then((res) => { if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} } }).catch((e) => console.warn('persist cart fail', e?.message || e))
-  try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+  try {
+    if (process.env.NODE_ENV !== 'production') console.debug('persisting cartItems (product page):', newProducts)
+    localStorage.setItem('cartItems', JSON.stringify(newProducts))
+  } catch (e) {}
       }
   // ensure Redux/localStorage are consistent; addProduct already updates Redux
     } catch (err) {
@@ -133,7 +136,10 @@ const Product = ({product}) => {
       const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
       const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
       if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-      try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+      try {
+        if (process.env.NODE_ENV !== 'production') console.debug('persisting cartItems (product page update):', newProducts)
+        localStorage.setItem('cartItems', JSON.stringify(newProducts))
+      } catch (e) {}
     } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
   }
 
@@ -148,7 +154,10 @@ const Product = ({product}) => {
       const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
       const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
       if (res?.data && res.data._1) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-      try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+      try {
+        if (process.env.NODE_ENV !== 'production') console.debug('persisting cartItems (product page remove):', newProducts)
+        localStorage.setItem('cartItems', JSON.stringify(newProducts))
+      } catch (e) {}
       if (newProducts.length === 0) {
         const subtotal = computeSubtotal(newProducts)
         dispatch(setCart({ items: normalizeCartItems(newProducts), subtotal }))

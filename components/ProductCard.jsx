@@ -55,7 +55,10 @@ const ProductCard = ({ product }) => {
         axios.post('/api/cart', { items: newProducts, subtotal, cartId })
           .then((res) => { if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} } })
           .catch((e) => console.warn('persist cart fail', e?.message || e))
-        try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+        try {
+          if (process.env.NODE_ENV !== 'production') console.debug('persisting cartItems (product card):', newProducts)
+          localStorage.setItem('cartItems', JSON.stringify(newProducts))
+        } catch (e) {}
     } else {
   // add new item - normalize first so Redux receives the same shape we persist
   const [normalizedItem] = normalizeCartItems([item])
@@ -117,7 +120,11 @@ const ProductCard = ({ product }) => {
       const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
       if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
     } catch (e) { console.warn('Failed to persist cart after remove:', e?.message || e) }
-  try { localStorage.setItem('cartItems', JSON.stringify(normalizeCartItems(cart.products.filter((_, i) => i !== index)))) } catch (e) {}
+  try {
+    const toSave = normalizeCartItems(cart.products.filter((_, i) => i !== index))
+    if (process.env.NODE_ENV !== 'production') console.debug('persisting cartItems (product card remove):', toSave)
+    localStorage.setItem('cartItems', JSON.stringify(toSave))
+  } catch (e) {}
   }
 
   // remove an item that exists only in localStorage (anonymous cart)
@@ -132,7 +139,10 @@ const ProductCard = ({ product }) => {
       // update Redux immediately so UI reflects removal
       const subtotal = computeSubtotal(normalized)
       dispatch(setCart({ items: normalized, subtotal }))
-      try { localStorage.setItem('cartItems', JSON.stringify(normalized)) } catch (e) {}
+      try {
+        if (process.env.NODE_ENV !== 'production') console.debug('persisting cartItems (product card normalized add):', normalized)
+        localStorage.setItem('cartItems', JSON.stringify(normalized))
+      } catch (e) {}
       const cartId = localStorage.getItem('cartId')
       try {
         const res = await axios.post('/api/cart', { items: normalized, subtotal, cartId })

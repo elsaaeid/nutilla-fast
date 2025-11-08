@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { normalizeCartItems } from '../util/cartHelpers'
 
 const cartSlice = createSlice({
   name: "cart",
@@ -9,7 +10,9 @@ const cartSlice = createSlice({
   },
   reducers: {
     addProduct: (state, action) => {
-      const item = action.payload || {}
+      // Always normalize incoming item to ensure offer/originalPrice/price/quantity are consistent
+      const raw = action.payload || {}
+      const [item] = normalizeCartItems([raw])
       const makeKey = (p) => {
         if (!p) return ''
         const id = p._id || p.productId || ''
@@ -48,9 +51,11 @@ const cartSlice = createSlice({
     },
     setCart: (state, action) => {
       const { items = [], subtotal = 0 } = action.payload || {}
-      state.products = items
-      state.quantity = Array.isArray(items) ? items.length : 0
-      state.total = Number(subtotal) || items.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+      // Normalize incoming items to ensure required fields (offer/originalPrice/price/quantity)
+      const normalized = Array.isArray(items) ? normalizeCartItems(items) : []
+      state.products = normalized
+      state.quantity = normalized.reduce((s, p) => s + (Number(p.quantity) || 0), 0)
+      state.total = Number(subtotal) || normalized.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
     },
     removeProduct: (state, action) => {
       const index = action.payload;

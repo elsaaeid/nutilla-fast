@@ -143,7 +143,7 @@
   font-weight: bold;
   cursor: pointer;
   margin-top: 20px;
-  padding: 15px 20px;
+  padding: 10px;
   width: max-content;
 }
 @media screen and (max-width:480px) {

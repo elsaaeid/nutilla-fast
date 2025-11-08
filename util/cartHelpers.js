@@ -12,13 +12,30 @@ export function normalizeCartItems(items = []) {
     const price = Number(item.price) || 0
     const hasOriginal = typeof item.originalPrice !== 'undefined' && item.originalPrice !== null && item.originalPrice !== ''
     const isOffer = parseOffer(item.offer)
-    if (!hasOriginal) {
-      item.originalPrice = isOffer ? (Number(item.originalPrice) || (price / 0.75)) : price
+
+    // Normalize originalPrice and price for offer items so discount calculations are correct
+    if (isOffer) {
+      // Determine original price: prefer provided originalPrice, otherwise derive from price
+      const orig = hasOriginal ? Number(item.originalPrice) : (price / 0.75)
+      item.originalPrice = Number(orig) || null
+      // Determine discounted price: prefer provided price if it's clearly smaller than original,
+      // otherwise compute it as 25% off the original.
+      const incomingPrice = Number(item.price) || 0
+      const discountedFromOrig = Math.round((Number(item.originalPrice) || orig) * 0.75 * 100) / 100
+      if (!incomingPrice || incomingPrice >= (Number(item.originalPrice) || orig) - 1e-6) {
+        item.price = discountedFromOrig
+      } else {
+        item.price = incomingPrice
+      }
     } else {
-      item.originalPrice = Number(item.originalPrice) || null
+      // Not an offer: ensure originalPrice is present (falls back to price)
+      item.originalPrice = hasOriginal ? Number(item.originalPrice) || null : price
+      item.price = price
     }
-    // ensure offer is boolean
-    item.offer = isOffer
+  // if item lacks an explicit offer flag but originalPrice is larger than price,
+  // infer this is an offer (helps anonymous/local carts where only one field was saved)
+  const inferredOffer = (!isOffer && hasOriginal && Number(item.originalPrice) > (Number(item.price) || 0) + 1e-6)
+  item.offer = !!(isOffer || inferredOffer)
     // coerce numeric fields
     item.price = Number(item.price) || 0
     item.quantity = Number(item.quantity) || 1

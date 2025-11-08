@@ -40,7 +40,16 @@ const Cart = () => {
       return false;
     }
     const isOffer = parseOfferLocal(p?.offer)
-    const origPrice = hasOriginal ? Number(p.originalPrice) : (isOffer ? (price / 0.75) : price)
+    let origPrice
+    if (isOffer) {
+      // If originalPrice exists and is greater than the stored price, prefer it.
+      // Otherwise derive original from discounted price (assuming 25% off).
+      const candidate = hasOriginal ? Number(p.originalPrice) : null
+      if (candidate && candidate > price) origPrice = candidate
+      else origPrice = price / 0.75
+    } else {
+      origPrice = hasOriginal ? Number(p.originalPrice) : price
+    }
     return acc + (Number(origPrice) || 0) * qty;
   }, 0);
   const discountTotal = Math.max(0, originalTotal - subtotalDiscounted);
@@ -87,17 +96,19 @@ const Cart = () => {
         dispatch(setCart({ items, subtotal }))
       } else {
         // fallback to localStorage when server has no cart for this user
-        try {
-          const raw = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null
-          if (raw) {
-            const parsed = JSON.parse(raw)
-            const items = Array.isArray(parsed) ? normalizeCartItems(parsed) : []
-            const subtotal = computeSubtotal(items)
-            if (items.length > 0) dispatch(setCart({ items, subtotal }))
+          try {
+            const raw = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null
+            if (raw) {
+              if (process.env.NODE_ENV !== 'production') console.debug('cart page raw localStorage cartItems:', raw)
+              const parsed = JSON.parse(raw)
+              const items = Array.isArray(parsed) ? normalizeCartItems(parsed) : []
+              if (process.env.NODE_ENV !== 'production') console.debug('cart page normalized items from localStorage:', items)
+              const subtotal = computeSubtotal(items)
+              if (items.length > 0) dispatch(setCart({ items, subtotal }))
+            }
+          } catch (e) {
+            // ignore malformed localStorage
           }
-        } catch (e) {
-          // ignore malformed localStorage
-        }
       }
     } catch (e) {
       // If server call fails for any reason, fall back to localStorage
