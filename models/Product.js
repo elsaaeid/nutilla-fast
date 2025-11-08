@@ -25,6 +25,17 @@ const ProductSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     }
+    ,
+    extraOptions: {
+      type: [
+        {
+          id: { type: String },
+          text: { type: String },
+          price: { type: Number },
+        }
+      ],
+      default: [],
+    }
   },
   { timestamps: true }
 );
