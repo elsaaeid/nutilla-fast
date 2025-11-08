@@ -33,6 +33,14 @@
 .qtyBtn, .removeBtn {
   cursor: pointer;
 }
+.payButton {
+  color: #51d11e;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 20px;
+  padding: 15px 20px;
+  width: max-content;
+}
 .name{
   font-weight: 500;
   color: #d1411e;
