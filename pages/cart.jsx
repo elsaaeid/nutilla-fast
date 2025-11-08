@@ -324,7 +324,7 @@ const Cart = () => {
                     console.warn('Failed to persist cart clear:', e?.message || e);
                   }
                   try { localStorage.removeItem('cartItems'); localStorage.removeItem('cartId') } catch (e) {}
-                  router.push('/products');
+                  router.push('/menus');
                 }}
               >
                 Clear cart
