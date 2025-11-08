@@ -89,7 +89,7 @@ const Cart = () => {
     try {
       const res = await axios.get(`/api/cart${cartId ? `?cartId=${cartId}` : ''}`, { withCredentials: true })
       const data = res.data || {}
-      console.log('loaded server cart:', data && (data.items || data.items === undefined ? data.items : data))
+      // console.log('loaded server cart:', data && (data.items || data.items === undefined ? data.items : data))
       const items = Array.isArray(data.items) ? data.items : []
       const subtotal = typeof data.subtotal === 'number' ? data.subtotal : Number(data.subtotal) || 0
       if (items.length > 0) {
