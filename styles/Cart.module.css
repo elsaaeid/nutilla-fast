@@ -1,5 +1,7 @@
 .container{
   padding: 50px;
+  display: flex;
+  justify-content: space-between;
 }
 .left{
   flex: 2;
