@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FiPlus, FiMinus, FiTrash } from 'react-icons/fi'
 
 const QtyControls = ({ quantity = 1, onIncrease, onDecrease, onRemove, styles = {} }) => {
@@ -11,6 +11,9 @@ const QtyControls = ({ quantity = 1, onIncrease, onDecrease, onRemove, styles = 
   }
 
   const q = Number(quantity) || 1
+  const [isRemoving, setIsRemoving] = useState(false)
+
+  if (isRemoving) return null
 
   if (q === 1) {
     return (
@@ -19,7 +22,14 @@ const QtyControls = ({ quantity = 1, onIncrease, onDecrease, onRemove, styles = 
         <button className={cls('qtyBtn')} onClick={onIncrease} aria-label="Increase">
           <FiPlus />
         </button>
-        <button className={cls('removeBtn')} onClick={onRemove} aria-label="Remove">
+        <button
+          className={cls('removeBtn')}
+          onClick={() => {
+            try { setIsRemoving(true) } catch (e) {}
+            if (typeof onRemove === 'function') onRemove()
+          }}
+          aria-label="Remove"
+        >
           <FiTrash />
         </button>
       </div>

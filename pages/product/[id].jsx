@@ -1,9 +1,9 @@
 import styles from "../../styles/Product.module.css";
 import style from "../../styles/global.module.css";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, updateQuantity, removeProduct } from "../../redux/cartSlice";
+import { addProduct, updateQuantity, removeProduct, setCart } from "../../redux/cartSlice";
 import axios from 'axios'
 import { normalizeCartItems, computeSubtotal } from '../../util/cartHelpers'
 import { FiShoppingCart } from 'react-icons/fi'
@@ -24,7 +24,7 @@ const Product = ({product}) => {
   const [price, setPrice] = useState(isOffer ? discountedBase : base);
   const [quantity, setQuantity] = useState(1);
   const [extras, setExtras] = useState([]);
-  const [inCartLocal, setInCartLocal] = useState(false)
+  // derive in-cart status on each render from Redux and localStorage
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart)
 
@@ -41,26 +41,33 @@ const Product = ({product}) => {
     return (cart && Array.isArray(cart.products)) ? cart.products.findIndex((p) => makeKey(p) === key) : -1
   }
 
-  useEffect(() => {
+  const prodForKey = { ...product, extras }
+  // use Redux as the single source of truth for in-cart status — localStorage can be stale
+  const inCart = findIndexInCart(prodForKey) !== -1
+
+  // remove an item that exists only in localStorage (anonymous cart)
+  const removeFromLocal = async (prod) => {
+    if (typeof window === 'undefined') return
     try {
-      const prodForKey = { ...product, extras }
-      const inRedux = findIndexInCart(prodForKey) !== -1
-      let inLS = false
-      if (typeof window !== 'undefined') {
-        try {
-          const raw = localStorage.getItem('cartItems')
-          if (raw) {
-            const items = JSON.parse(raw)
-            if (Array.isArray(items)) {
-              const key = makeKey(prodForKey)
-              inLS = items.some((p) => makeKey(p) === key)
-            }
-          }
-        } catch (e) { inLS = false }
+      const raw = localStorage.getItem('cartItems')
+      const items = raw ? JSON.parse(raw) : []
+      const key = makeKey(prod)
+      const newItems = (Array.isArray(items) ? items : []).filter((p) => makeKey(p) !== key)
+      const normalized = normalizeCartItems(newItems)
+      const subtotal = computeSubtotal(normalized)
+      dispatch(setCart({ items: normalized, subtotal }))
+      try { localStorage.setItem('cartItems', JSON.stringify(normalized)) } catch (e) {}
+      const cartId = localStorage.getItem('cartId')
+      try {
+        const res = await axios.post('/api/cart', { items: normalized, subtotal, cartId })
+        if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+      } catch (e) {
+        console.warn('Failed to persist anonymous cart after remove:', e?.message || e)
       }
-      setInCartLocal(inRedux || inLS)
-    } catch (e) { setInCartLocal(false) }
-  }, [cart.products, extras, product])
+    } catch (e) {
+      console.warn('Failed to remove item from local cart:', e?.message || e)
+    }
+  }
 
   const changePrice = (number) => {
     const n = Number(number) || 0
@@ -107,12 +114,12 @@ const Product = ({product}) => {
         axios.post('/api/cart', { items: newProducts, subtotal, cartId }).then((res) => { if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} } }).catch((e) => console.warn('persist cart fail', e?.message || e))
   try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
       }
-      setInCartLocal(true)
+  // ensure Redux/localStorage are consistent; addProduct already updates Redux
     } catch (err) {
       // fallback simple add
       const [normalizedItem] = normalizeCartItems([item])
       dispatch(addProduct(normalizedItem))
-      setInCartLocal(true)
+  // fallback: rely on Redux/localStorage updates
   try { const existing = (cart && Array.isArray(cart.products)) ? cart.products : []; const merged = normalizeCartItems([...existing, normalizedItem]); localStorage.setItem('cartItems', JSON.stringify(merged)) } catch (e) {}
     }
   }
@@ -142,7 +149,10 @@ const Product = ({product}) => {
       const res = await axios.post('/api/cart', { items: newProducts, subtotal, cartId })
       if (res?.data && res.data._1) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
       try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-      if (newProducts.length === 0) setInCartLocal(false)
+      if (newProducts.length === 0) {
+        const subtotal = computeSubtotal(newProducts)
+        dispatch(setCart({ items: normalizeCartItems(newProducts), subtotal }))
+      }
     } catch (e) { console.warn('Failed to persist cart qty change:', e?.message || e) }
   }
 
@@ -156,7 +166,12 @@ const Product = ({product}) => {
   if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
     } catch (e) { console.warn('Failed to persist cart after remove:', e?.message || e) }
   try { localStorage.setItem('cartItems', JSON.stringify(normalizeCartItems(cart.products.filter((_, i) => i !== index)))) } catch (e) {}
-    setInCartLocal(false)
+    // update Redux/localStorage to reflect removal
+    try {
+      const normalized = normalizeCartItems(cart.products.filter((_, i) => i !== index))
+      const subtotal = computeSubtotal(normalized)
+      dispatch(setCart({ items: normalized, subtotal }))
+    } catch (e) {}
   }
 
   return (
@@ -203,7 +218,7 @@ const Product = ({product}) => {
           {(() => {
             const prodForKey = { ...product, extras }
             const idx = findIndexInCart(prodForKey)
-            const isInCart = inCartLocal
+            const isInCart = inCart
             if (!isInCart) {
               return (
                 <>
@@ -228,7 +243,7 @@ const Product = ({product}) => {
                 quantity={q}
                 onIncrease={() => (idx === -1 ? null : handleIncrease(idx))}
                 onDecrease={() => (idx === -1 ? null : handleDecrease(idx))}
-                onRemove={() => (idx === -1 ? setInCartLocal(false) : handleRemoveFromCart(idx))}
+                onRemove={() => (idx === -1 ? removeFromLocal(product) : handleRemoveFromCart(idx))}
                 styles={styles}
               />
             )
