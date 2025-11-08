@@ -10,17 +10,36 @@
 .imgContainer{
   position: relative;
 }
-.table{
-  width: 100%;
-  border-spacing: 20px;
-  border-collapse: collapse;
-  /* make the table horizontally scrollable on narrow viewports */
-  display: block;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+/* table styles removed in favor of responsive card layout (.itemsList/.itemCard) */
+
+/* item list (card) styles used on mobile and as an alternative to the table layout */
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.table thead{ display: table-header-group; }
-.table tbody{ display: table-row-group; }
+.itemCard {
+  background: #d3d3d3;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
 /* cell padding and subtle separators */
 .trTitle th,
 .tr td {
@@ -75,6 +94,7 @@
     padding: 20px;
   }
   .table {
+    /* replace table behavior with itemsList for stacked layout */
     display: flex;
     flex-direction: column;
   }
@@ -104,7 +124,7 @@
 /* tablet: keep headers, allow horizontal scrolling */
 @media screen and (max-width:768px) and (min-width:481px) {
   .container{ padding: 30px; }
-  .table{ display: block; overflow-x: auto; }
+  .itemsList{ overflow-x: auto; }
   .trTitle th, .tr td { padding: 10px 8px; }
 }
 

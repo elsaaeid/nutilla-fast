@@ -136,107 +136,81 @@ const Cart = () => {
             </button>
           </div>
         ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr className={styles.trTitle}>
-            <th>Product</th>
-            <th>Name</th>
-            {/* Show Extras column only if at least one product has extras */}
-            {cart.products && cart.products.some(p => p.extras && p.extras.length > 0) && <th>Extras</th>}
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-            <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart.products.map((product, idx) => (
-                <tr className={styles.tr} key={product._id || idx}>
-                  <td>
-                    <div className={styles.imgContainer}>
-                      <Image
-                        src={product.img}
-                        alt={product.title}
-                        width="max-content"
-                        height={43}
-                        style={{ objectFit: 'cover' }}
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <span className={styles.name}>{product.title}</span>
-                  </td>
-                  {cart.products && cart.products.some(p => p.extras && p.extras.length > 0) && (
-                    <td>
-                      <span className={styles.extras}>
-                        {product.extras && product.extras.length > 0
-                          ? product.extras.map((e) => e.text).join(', ')
-                          : null}
-                      </span>
-                    </td>
-                  )}
-                  <td>
-                    <span className={styles.price}>${product.price}</span>
-                  </td>
-                  <td>
-                    <div className={styles.qtyControls}>
-                      <button
-                        className={styles.qtyBtn}
-                        onClick={async () => {
-                          const amount = -1
-                          const newProducts = cart.products
-                            .map((p, i) => (i === idx ? { ...p, quantity: Math.max(0, (Number(p.quantity) || 0) + amount) } : p))
-                            .filter((p) => (Number(p.quantity) || 0) > 0)
-                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                          // update client state
-                          dispatch(updateQuantity({ index: idx, amount }))
-                          // persist
-                          try {
-                            const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
-                            if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-                          } catch (e) {
-                            console.warn('Failed to persist cart qty change:', e?.message || e)
-                          }
-                          try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
-                        }}
-                      >
-                        -
-                      </button>
-                      <span className={styles.quantity}>{product.quantity}</span>
-                      <button
-                        className={styles.qtyBtn}
-                        onClick={async () => {
-                          const amount = 1
-                          const newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
-                          const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
-                          dispatch(updateQuantity({ index: idx, amount }))
-                          try {
-                            const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
-                            const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
-                            if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
-                          } catch (e) {
-                            console.warn('Failed to persist cart qty change:', e?.message || e)
-                          }
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={styles.total}>${product.price * product.quantity}</span>
-                  </td>
-                  <td>
+          <div className={styles.itemsList}>
+            {cart.products.map((product, idx) => (
+              <div className={styles.itemCard} key={product._id || idx}>
+                <div className={styles.cardRow}>
+                  <div className={styles.imgContainer}>
+                    <Image
+                      src={product.img}
+                      alt={product.title}
+                      width={72}
+                      height={72}
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className={styles.cardContent}>
+                    <div className={styles.name}>{product.title}</div>
+                    {product.extras && product.extras.length > 0 && (
+                      <div className={styles.extras}>{product.extras.map(e => e.text).join(', ')}</div>
+                    )}
+                    <div className={styles.price}>Price: ${product.price}</div>
+                  </div>
+                </div>
+
+                <div className={styles.cardRow}>
+                  <div className={styles.qtyControls}>
+                    <button
+                      className={styles.qtyBtn}
+                      onClick={async () => {
+                        const amount = -1
+                        const newProducts = cart.products
+                          .map((p, i) => (i === idx ? { ...p, quantity: Math.max(0, (Number(p.quantity) || 0) + amount) } : p))
+                          .filter((p) => (Number(p.quantity) || 0) > 0)
+                        const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                        dispatch(updateQuantity({ index: idx, amount }))
+                        try {
+                          const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
+                          const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                          if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+                        } catch (e) {
+                          console.warn('Failed to persist cart qty change:', e?.message || e)
+                        }
+                        try { localStorage.setItem('cartItems', JSON.stringify(newProducts)) } catch (e) {}
+                      }}
+                    >
+                      -
+                    </button>
+                    <span className={styles.quantity}>{product.quantity}</span>
+                    <button
+                      className={styles.qtyBtn}
+                      onClick={async () => {
+                        const amount = 1
+                        const newProducts = cart.products.map((p, i) => (i === idx ? { ...p, quantity: (Number(p.quantity) || 0) + amount } : p))
+                        const newSubtotal = newProducts.reduce((s, p) => s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0)
+                        dispatch(updateQuantity({ index: idx, amount }))
+                        try {
+                          const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
+                          const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
+                          if (res?.data && res.data._id) { try { localStorage.setItem('cartId', res.data._id) } catch (e) {} }
+                        } catch (e) {
+                          console.warn('Failed to persist cart qty change:', e?.message || e)
+                        }
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div className={styles.total}>Total: ${product.price * product.quantity}</div>
+
+                  <div>
                     <button
                       className={styles.removeBtn}
                       onClick={async () => {
-                        // compute new products array after removal
                         const newProducts = cart.products.filter((_, i) => i !== idx);
                         const newSubtotal = newProducts.reduce((s, p) => s + p.price * p.quantity, 0);
-                        // update client state
                         dispatch(removeProduct(idx));
-                        // persist server-side (best-effort) and update local cache
                         try {
                           const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null
                           const res = await axios.post('/api/cart', { items: newProducts, subtotal: newSubtotal, cartId })
@@ -249,11 +223,11 @@ const Cart = () => {
                     >
                       Remove
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
       {cart.products && cart.products.length > 0 && (
