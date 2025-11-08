@@ -186,10 +186,23 @@ const Order = ({ order }) => {
 };
 
 export const getServerSideProps = async ({ params }) => {
-  const res = await axios.get(`http://localhost:3000/api/orders/${params.id}`);
-  return {
-    props: { order: res.data },
-  };
+  try {
+    const dbConnect = require("../../util/mongo").default || require("../../util/mongo");
+    const Order = (require("../../models/Order").default || require("../../models/Order"));
+    await dbConnect();
+    const order = await Order.findById(params.id).lean();
+    if (!order) return { notFound: true };
+    const serialized = {
+      ...order,
+      _id: String(order._id),
+      createdAt: order.createdAt ? order.createdAt.toISOString() : null,
+      updatedAt: order.updatedAt ? order.updatedAt.toISOString() : null,
+    };
+    return { props: { order: serialized } };
+  } catch (err) {
+    console.error('Error fetching order in getServerSideProps:', err?.message || err);
+    return { props: { order: null } };
+  }
 };
 
 export default Order;
