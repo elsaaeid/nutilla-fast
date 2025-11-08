@@ -131,8 +131,8 @@ const Cart = () => {
           <div className={styles.empty}>
             <h2>No items added</h2>
             <p>Your cart is empty. Start adding delicious items!</p>
-            <button className={styles.browseBtn} onClick={() => router.push('/products')}>
-              Browse products
+            <button className={styles.browseBtn} onClick={() => router.push('/menus')}>
+              Browse menus
             </button>
           </div>
         ) : (
