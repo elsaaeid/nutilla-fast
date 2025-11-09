@@ -1,488 +1,65 @@
 "use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 (() => {
 var exports = {};
-exports.id = 579;
-exports.ids = [579];
+exports.id = "pages/api/cart";
+exports.ids = ["pages/api/cart"];
 exports.modules = {
 
-/***/ 1185:
+/***/ "mongoose":
+/*!***************************!*\
+  !*** external "mongoose" ***!
+  \***************************/
 /***/ ((module) => {
 
 module.exports = require("mongoose");
 
 /***/ }),
 
-/***/ 9442:
+/***/ "(api)/./models/Cart.js":
+/*!************************!*\
+  !*** ./models/Cart.js ***!
+  \************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1185);
-/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);
-
-const ProductSchema = new (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema)({
-    img: {
-        type: String,
-        required: true
-    },
-    title: {
-        type: String,
-        required: true,
-        maxlength: 60
-    },
-    price: {
-        type: [
-            Number
-        ],
-        required: true
-    },
-    desc: {
-        type: String,
-        required: true,
-        maxlength: 200
-    },
-    offer: {
-        type: Boolean,
-        default: false
-    },
-    extraOptions: {
-        type: [
-            {
-                id: {
-                    type: String
-                },
-                text: {
-                    type: String
-                },
-                price: {
-                    type: Number
-                }
-            }
-        ],
-        default: []
-    }
-}, {
-    timestamps: true
-});
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((mongoose__WEBPACK_IMPORTED_MODULE_0___default().models.Product) || mongoose__WEBPACK_IMPORTED_MODULE_0___default().model("Product", ProductSchema));
-
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mongoose */ \"mongoose\");\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);\n\nconst ExtraSchema = new (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema)({\n    text: {\n        type: String\n    },\n    price: {\n        type: Number\n    }\n}, {\n    _id: false\n});\nconst CartItemSchema = new (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema)({\n    // productId may be absent for anonymous/temporary items; keep it optional\n    productId: {\n        type: (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema.Types.ObjectId),\n        ref: \"Product\",\n        required: false\n    },\n    title: {\n        type: String\n    },\n    img: {\n        type: String\n    },\n    price: {\n        type: Number,\n        required: true\n    },\n    // keep whether this item was an offer (discounted) and optionally the original price\n    offer: {\n        type: Boolean,\n        default: false\n    },\n    originalPrice: {\n        type: Number,\n        required: false\n    },\n    quantity: {\n        type: Number,\n        default: 1\n    },\n    extras: {\n        type: [\n            ExtraSchema\n        ],\n        default: []\n    }\n}, {\n    _id: false\n});\nconst CartSchema = new (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema)({\n    user: {\n        type: (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema.Types.ObjectId),\n        ref: \"User\",\n        required: false\n    },\n    items: {\n        type: [\n            CartItemSchema\n        ],\n        default: []\n    },\n    subtotal: {\n        type: Number,\n        default: 0\n    },\n    createdAt: {\n        type: Date,\n        default: Date.now\n    },\n    updatedAt: {\n        type: Date,\n        default: Date.now\n    }\n}, {\n    timestamps: true\n});\n// Keep model re-use across hot-reloads in dev\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((mongoose__WEBPACK_IMPORTED_MODULE_0___default().models.Cart) || mongoose__WEBPACK_IMPORTED_MODULE_0___default().model(\"Cart\", CartSchema));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9tb2RlbHMvQ2FydC5qcy5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7QUFBK0I7QUFFL0IsTUFBTUMsY0FBYyxJQUFJRCx3REFBZSxDQUFDO0lBQ3RDRyxNQUFNO1FBQUVDLE1BQU1DO0lBQU87SUFDckJDLE9BQU87UUFBRUYsTUFBTUc7SUFBTztBQUN4QixHQUFHO0lBQUVDLEtBQUssS0FBSztBQUFDO0FBRWhCLE1BQU1DLGlCQUFpQixJQUFJVCx3REFBZSxDQUFDO0lBQ3pDLDBFQUEwRTtJQUMxRVUsV0FBVztRQUFFTixNQUFNSix1RUFBOEI7UUFBRWEsS0FBSztRQUFXQyxVQUFVLEtBQUs7SUFBQztJQUNuRkMsT0FBTztRQUFFWCxNQUFNQztJQUFPO0lBQ3RCVyxLQUFLO1FBQUVaLE1BQU1DO0lBQU87SUFDcEJDLE9BQU87UUFBRUYsTUFBTUc7UUFBUU8sVUFBVSxJQUFJO0lBQUM7SUFDdEMscUZBQXFGO0lBQ3JGRyxPQUFPO1FBQUViLE1BQU1jO1FBQVNDLFNBQVMsS0FBSztJQUFDO0lBQ3ZDQyxlQUFlO1FBQUVoQixNQUFNRztRQUFRTyxVQUFVLEtBQUs7SUFBQztJQUMvQ08sVUFBVTtRQUFFakIsTUFBTUc7UUFBUVksU0FBUztJQUFFO0lBQ3JDRyxRQUFRO1FBQUVsQixNQUFNO1lBQUNIO1NBQVk7UUFBRWtCLFNBQVMsRUFBRTtJQUFDO0FBQzdDLEdBQUc7SUFBRVgsS0FBSyxLQUFLO0FBQUM7QUFFaEIsTUFBTWUsYUFBYSxJQUFJdkIsd0RBQWUsQ0FBQztJQUNyQ3dCLE1BQU07UUFBRXBCLE1BQU1KLHVFQUE4QjtRQUFFYSxLQUFLO1FBQVFDLFVBQVUsS0FBSztJQUFDO0lBQzNFVyxPQUFPO1FBQUVyQixNQUFNO1lBQUNLO1NBQWU7UUFBRVUsU0FBUyxFQUFFO0lBQUM7SUFDN0NPLFVBQVU7UUFBRXRCLE1BQU1HO1FBQVFZLFNBQVM7SUFBRTtJQUNyQ1EsV0FBVztRQUFFdkIsTUFBTXdCO1FBQU1ULFNBQVNTLEtBQUtDLEdBQUc7SUFBQztJQUMzQ0MsV0FBVztRQUFFMUIsTUFBTXdCO1FBQU1ULFNBQVNTLEtBQUtDLEdBQUc7SUFBQztBQUM3QyxHQUFHO0lBQUVFLFlBQVksSUFBSTtBQUFDO0FBRXRCLDhDQUE4QztBQUM5QyxpRUFBZS9CLDZEQUFvQixJQUFJQSxxREFBYyxDQUFDLFFBQVF1QixXQUFXQSxFQUFBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vbnV0aWxsYS1mYXN0Ly4vbW9kZWxzL0NhcnQuanM/MGM4YSJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgbW9uZ29vc2UgZnJvbSAnbW9uZ29vc2UnXHJcblxyXG5jb25zdCBFeHRyYVNjaGVtYSA9IG5ldyBtb25nb29zZS5TY2hlbWEoe1xyXG4gIHRleHQ6IHsgdHlwZTogU3RyaW5nIH0sXHJcbiAgcHJpY2U6IHsgdHlwZTogTnVtYmVyIH0sXHJcbn0sIHsgX2lkOiBmYWxzZSB9KVxyXG5cclxuY29uc3QgQ2FydEl0ZW1TY2hlbWEgPSBuZXcgbW9uZ29vc2UuU2NoZW1hKHtcclxuICAvLyBwcm9kdWN0SWQgbWF5IGJlIGFic2VudCBmb3IgYW5vbnltb3VzL3RlbXBvcmFyeSBpdGVtczsga2VlcCBpdCBvcHRpb25hbFxyXG4gIHByb2R1Y3RJZDogeyB0eXBlOiBtb25nb29zZS5TY2hlbWEuVHlwZXMuT2JqZWN0SWQsIHJlZjogJ1Byb2R1Y3QnLCByZXF1aXJlZDogZmFsc2UgfSxcclxuICB0aXRsZTogeyB0eXBlOiBTdHJpbmcgfSxcclxuICBpbWc6IHsgdHlwZTogU3RyaW5nIH0sXHJcbiAgcHJpY2U6IHsgdHlwZTogTnVtYmVyLCByZXF1aXJlZDogdHJ1ZSB9LFxyXG4gIC8vIGtlZXAgd2hldGhlciB0aGlzIGl0ZW0gd2FzIGFuIG9mZmVyIChkaXNjb3VudGVkKSBhbmQgb3B0aW9uYWxseSB0aGUgb3JpZ2luYWwgcHJpY2VcclxuICBvZmZlcjogeyB0eXBlOiBCb29sZWFuLCBkZWZhdWx0OiBmYWxzZSB9LFxyXG4gIG9yaWdpbmFsUHJpY2U6IHsgdHlwZTogTnVtYmVyLCByZXF1aXJlZDogZmFsc2UgfSxcclxuICBxdWFudGl0eTogeyB0eXBlOiBOdW1iZXIsIGRlZmF1bHQ6IDEgfSxcclxuICBleHRyYXM6IHsgdHlwZTogW0V4dHJhU2NoZW1hXSwgZGVmYXVsdDogW10gfSxcclxufSwgeyBfaWQ6IGZhbHNlIH0pXHJcblxyXG5jb25zdCBDYXJ0U2NoZW1hID0gbmV3IG1vbmdvb3NlLlNjaGVtYSh7XHJcbiAgdXNlcjogeyB0eXBlOiBtb25nb29zZS5TY2hlbWEuVHlwZXMuT2JqZWN0SWQsIHJlZjogJ1VzZXInLCByZXF1aXJlZDogZmFsc2UgfSxcclxuICBpdGVtczogeyB0eXBlOiBbQ2FydEl0ZW1TY2hlbWFdLCBkZWZhdWx0OiBbXSB9LFxyXG4gIHN1YnRvdGFsOiB7IHR5cGU6IE51bWJlciwgZGVmYXVsdDogMCB9LFxyXG4gIGNyZWF0ZWRBdDogeyB0eXBlOiBEYXRlLCBkZWZhdWx0OiBEYXRlLm5vdyB9LFxyXG4gIHVwZGF0ZWRBdDogeyB0eXBlOiBEYXRlLCBkZWZhdWx0OiBEYXRlLm5vdyB9LFxyXG59LCB7IHRpbWVzdGFtcHM6IHRydWUgfSlcclxuXHJcbi8vIEtlZXAgbW9kZWwgcmUtdXNlIGFjcm9zcyBob3QtcmVsb2FkcyBpbiBkZXZcclxuZXhwb3J0IGRlZmF1bHQgbW9uZ29vc2UubW9kZWxzLkNhcnQgfHwgbW9uZ29vc2UubW9kZWwoJ0NhcnQnLCBDYXJ0U2NoZW1hKVxyXG4iXSwibmFtZXMiOlsibW9uZ29vc2UiLCJFeHRyYVNjaGVtYSIsIlNjaGVtYSIsInRleHQiLCJ0eXBlIiwiU3RyaW5nIiwicHJpY2UiLCJOdW1iZXIiLCJfaWQiLCJDYXJ0SXRlbVNjaGVtYSIsInByb2R1Y3RJZCIsIlR5cGVzIiwiT2JqZWN0SWQiLCJyZWYiLCJyZXF1aXJlZCIsInRpdGxlIiwiaW1nIiwib2ZmZXIiLCJCb29sZWFuIiwiZGVmYXVsdCIsIm9yaWdpbmFsUHJpY2UiLCJxdWFudGl0eSIsImV4dHJhcyIsIkNhcnRTY2hlbWEiLCJ1c2VyIiwiaXRlbXMiLCJzdWJ0b3RhbCIsImNyZWF0ZWRBdCIsIkRhdGUiLCJub3ciLCJ1cGRhdGVkQXQiLCJ0aW1lc3RhbXBzIiwibW9kZWxzIiwiQ2FydCIsIm1vZGVsIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(api)/./models/Cart.js\n");
 
 /***/ }),
 
-/***/ 4042:
+/***/ "(api)/./models/Product.js":
+/*!***************************!*\
+  !*** ./models/Product.js ***!
+  \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mongoose */ \"mongoose\");\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);\n\nconst ProductSchema = new (mongoose__WEBPACK_IMPORTED_MODULE_0___default().Schema)({\n    img: {\n        type: String,\n        required: true\n    },\n    title: {\n        type: String,\n        required: true,\n        maxlength: 60\n    },\n    price: {\n        type: [\n            Number\n        ],\n        required: true\n    },\n    desc: {\n        type: String,\n        required: true,\n        maxlength: 200\n    },\n    offer: {\n        type: Boolean,\n        default: false\n    },\n    extraOptions: {\n        type: [\n            {\n                id: {\n                    type: String\n                },\n                text: {\n                    type: String\n                },\n                price: {\n                    type: Number\n                }\n            }\n        ],\n        default: []\n    }\n}, {\n    timestamps: true\n});\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((mongoose__WEBPACK_IMPORTED_MODULE_0___default().models.Product) || mongoose__WEBPACK_IMPORTED_MODULE_0___default().model(\"Product\", ProductSchema));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9tb2RlbHMvUHJvZHVjdC5qcy5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7QUFBZ0M7QUFFaEMsTUFBTUMsZ0JBQWdCLElBQUlELHdEQUFlLENBQ3ZDO0lBQ0VHLEtBQUs7UUFDSEMsTUFBTUM7UUFDTkMsVUFBVSxJQUFJO0lBQ2hCO0lBQ0FDLE9BQU87UUFDTEgsTUFBTUM7UUFDTkMsVUFBVSxJQUFJO1FBQ2RFLFdBQVc7SUFDYjtJQUNBQyxPQUFPO1FBQ0xMLE1BQU07WUFBQ007U0FBTztRQUNkSixVQUFVLElBQUk7SUFDaEI7SUFDQUssTUFBTTtRQUNKUCxNQUFNQztRQUNOQyxVQUFVLElBQUk7UUFDZEUsV0FBVztJQUNiO0lBRUFJLE9BQU87UUFDTFIsTUFBTVM7UUFDTkMsU0FBUyxLQUFLO0lBQ2hCO0lBRUFDLGNBQWM7UUFDWlgsTUFBTTtZQUNKO2dCQUNFWSxJQUFJO29CQUFFWixNQUFNQztnQkFBTztnQkFDbkJZLE1BQU07b0JBQUViLE1BQU1DO2dCQUFPO2dCQUNyQkksT0FBTztvQkFBRUwsTUFBTU07Z0JBQU87WUFDeEI7U0FDRDtRQUNESSxTQUFTLEVBQUU7SUFDYjtBQUNGLEdBQ0E7SUFBRUksWUFBWSxJQUFJO0FBQUM7QUFHckIsaUVBQWVsQixnRUFBdUIsSUFDcENBLHFEQUFjLENBQUMsV0FBV0MsY0FBY0EsRUFBQyIsInNvdXJjZXMiOlsid2VicGFjazovL251dGlsbGEtZmFzdC8uL21vZGVscy9Qcm9kdWN0LmpzPzA5YzYiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IG1vbmdvb3NlIGZyb20gXCJtb25nb29zZVwiO1xyXG5cclxuY29uc3QgUHJvZHVjdFNjaGVtYSA9IG5ldyBtb25nb29zZS5TY2hlbWEoXHJcbiAge1xyXG4gICAgaW1nOiB7XHJcbiAgICAgIHR5cGU6IFN0cmluZyxcclxuICAgICAgcmVxdWlyZWQ6IHRydWUsXHJcbiAgICB9LFxyXG4gICAgdGl0bGU6IHtcclxuICAgICAgdHlwZTogU3RyaW5nLFxyXG4gICAgICByZXF1aXJlZDogdHJ1ZSxcclxuICAgICAgbWF4bGVuZ3RoOiA2MCxcclxuICAgIH0sXHJcbiAgICBwcmljZToge1xyXG4gICAgICB0eXBlOiBbTnVtYmVyXSxcclxuICAgICAgcmVxdWlyZWQ6IHRydWUsXHJcbiAgICB9LFxyXG4gICAgZGVzYzoge1xyXG4gICAgICB0eXBlOiBTdHJpbmcsXHJcbiAgICAgIHJlcXVpcmVkOiB0cnVlLFxyXG4gICAgICBtYXhsZW5ndGg6IDIwMCxcclxuICAgIH1cclxuICAgICxcclxuICAgIG9mZmVyOiB7XHJcbiAgICAgIHR5cGU6IEJvb2xlYW4sXHJcbiAgICAgIGRlZmF1bHQ6IGZhbHNlLFxyXG4gICAgfVxyXG4gICAgLFxyXG4gICAgZXh0cmFPcHRpb25zOiB7XHJcbiAgICAgIHR5cGU6IFtcclxuICAgICAgICB7XHJcbiAgICAgICAgICBpZDogeyB0eXBlOiBTdHJpbmcgfSxcclxuICAgICAgICAgIHRleHQ6IHsgdHlwZTogU3RyaW5nIH0sXHJcbiAgICAgICAgICBwcmljZTogeyB0eXBlOiBOdW1iZXIgfSxcclxuICAgICAgICB9XHJcbiAgICAgIF0sXHJcbiAgICAgIGRlZmF1bHQ6IFtdLFxyXG4gICAgfVxyXG4gIH0sXHJcbiAgeyB0aW1lc3RhbXBzOiB0cnVlIH1cclxuKTtcclxuXHJcbmV4cG9ydCBkZWZhdWx0IG1vbmdvb3NlLm1vZGVscy5Qcm9kdWN0IHx8XHJcbiAgbW9uZ29vc2UubW9kZWwoXCJQcm9kdWN0XCIsIFByb2R1Y3RTY2hlbWEpOyJdLCJuYW1lcyI6WyJtb25nb29zZSIsIlByb2R1Y3RTY2hlbWEiLCJTY2hlbWEiLCJpbWciLCJ0eXBlIiwiU3RyaW5nIiwicmVxdWlyZWQiLCJ0aXRsZSIsIm1heGxlbmd0aCIsInByaWNlIiwiTnVtYmVyIiwiZGVzYyIsIm9mZmVyIiwiQm9vbGVhbiIsImRlZmF1bHQiLCJleHRyYU9wdGlvbnMiLCJpZCIsInRleHQiLCJ0aW1lc3RhbXBzIiwibW9kZWxzIiwiUHJvZHVjdCIsIm1vZGVsIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(api)/./models/Product.js\n");
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ handler)
-});
+/***/ }),
 
-// EXTERNAL MODULE: ./util/mongo.js
-var mongo = __webpack_require__(7597);
-// EXTERNAL MODULE: external "mongoose"
-var external_mongoose_ = __webpack_require__(1185);
-var external_mongoose_default = /*#__PURE__*/__webpack_require__.n(external_mongoose_);
-;// CONCATENATED MODULE: ./models/Cart.js
+/***/ "(api)/./pages/api/cart/index.js":
+/*!*********************************!*\
+  !*** ./pages/api/cart/index.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-const ExtraSchema = new (external_mongoose_default()).Schema({
-    text: {
-        type: String
-    },
-    price: {
-        type: Number
-    }
-}, {
-    _id: false
-});
-const CartItemSchema = new (external_mongoose_default()).Schema({
-    // productId may be absent for anonymous/temporary items; keep it optional
-    productId: {
-        type: (external_mongoose_default()).Schema.Types.ObjectId,
-        ref: "Product",
-        required: false
-    },
-    title: {
-        type: String
-    },
-    img: {
-        type: String
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    // keep whether this item was an offer (discounted) and optionally the original price
-    offer: {
-        type: Boolean,
-        default: false
-    },
-    originalPrice: {
-        type: Number,
-        required: false
-    },
-    quantity: {
-        type: Number,
-        default: 1
-    },
-    extras: {
-        type: [
-            ExtraSchema
-        ],
-        default: []
-    }
-}, {
-    _id: false
-});
-const CartSchema = new (external_mongoose_default()).Schema({
-    user: {
-        type: (external_mongoose_default()).Schema.Types.ObjectId,
-        ref: "User",
-        required: false
-    },
-    items: {
-        type: [
-            CartItemSchema
-        ],
-        default: []
-    },
-    subtotal: {
-        type: Number,
-        default: 0
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
-}, {
-    timestamps: true
-});
-// Keep model re-use across hot-reloads in dev
-/* harmony default export */ const Cart = ((external_mongoose_default()).models.Cart || external_mongoose_default().model("Cart", CartSchema));
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ handler)\n/* harmony export */ });\n/* harmony import */ var _util_mongo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/mongo */ \"(api)/./util/mongo.js\");\n/* harmony import */ var _models_Cart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../models/Cart */ \"(api)/./models/Cart.js\");\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! mongoose */ \"mongoose\");\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n// Dev/Prod: simple cart persistence APIs\nasync function handler(req, res) {\n    const { method  } = req;\n    const token = req.cookies?.token;\n    try {\n        await (0,_util_mongo__WEBPACK_IMPORTED_MODULE_0__[\"default\"])();\n        // resolve user id from token (dev: token === userId, admin token is env TOKEN)\n        let userId = null;\n        if (token && token !== process.env.TOKEN) userId = token;\n        if (method === \"GET\") {\n            // allow fetching by cartId (anonymous carts) or by logged-in user\n            const { cartId  } = req.query || {};\n            if (cartId) {\n                if (!mongoose__WEBPACK_IMPORTED_MODULE_2___default().Types.ObjectId.isValid(cartId)) return res.status(400).json({\n                    message: \"invalid cartId\"\n                });\n                const cart = await _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"].findById(cartId).lean();\n                if (!cart) return res.status(200).json({\n                    items: [],\n                    subtotal: 0\n                });\n                const serialized = {\n                    ...cart,\n                    _id: String(cart._id),\n                    user: cart.user ? String(cart.user) : null,\n                    createdAt: cart.createdAt ? cart.createdAt.toISOString() : null,\n                    updatedAt: cart.updatedAt ? cart.updatedAt.toISOString() : null\n                };\n                // If stored items lack offer/originalPrice, try to enrich them from Product collection\n                try {\n                    const Product = __webpack_require__(/*! ../../../models/Product */ \"(api)/./models/Product.js\");\n                    if (Array.isArray(serialized.items) && serialized.items.length > 0) {\n                        for(let i = 0; i < serialized.items.length; i++){\n                            const it = serialized.items[i];\n                            if (it && it.productId && (!(\"offer\" in it) || !(\"originalPrice\" in it))) {\n                                try {\n                                    const prod = await Product.findById(it.productId).lean();\n                                    if (prod) {\n                                        // derive original price from product price field\n                                        const base = Array.isArray(prod.price) ? prod.price[0] : prod.price;\n                                        serialized.items[i].offer = (()=>{\n                                            const v = prod.offer;\n                                            if (typeof v === \"boolean\") return v;\n                                            if (typeof v === \"string\") return [\n                                                \"true\",\n                                                \"1\",\n                                                \"yes\"\n                                            ].includes(v.toLowerCase().trim());\n                                            if (typeof v === \"number\") return v === 1;\n                                            return false;\n                                        })();\n                                        serialized.items[i].originalPrice = typeof base !== \"undefined\" && base !== null ? Number(base) || null : null;\n                                    }\n                                } catch (e) {\n                                /* ignore per-item enrich errors */ }\n                            }\n                        }\n                    }\n                } catch (e1) {\n                /* ignore enrichment errors */ }\n                try {\n                    console.log(\"/api/cart GET by cartId:\", cartId, \"items:\", (serialized.items || []).length);\n                } catch (e2) {}\n                return res.status(200).json(serialized);\n            }\n            if (!userId) return res.status(200).json({\n                items: [],\n                subtotal: 0\n            });\n            const cart1 = await _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"].findOne({\n                user: userId\n            }).lean();\n            if (!cart1) {\n                try {\n                    console.log(\"/api/cart GET for userId:\", userId, \"no cart found\");\n                } catch (e3) {}\n                return res.status(200).json({\n                    items: [],\n                    subtotal: 0\n                });\n            }\n            // serialize\n            const serialized1 = {\n                ...cart1,\n                _id: String(cart1._id),\n                user: cart1.user ? String(cart1.user) : null,\n                createdAt: cart1.createdAt ? cart1.createdAt.toISOString() : null,\n                updatedAt: cart1.updatedAt ? cart1.updatedAt.toISOString() : null\n            };\n            // Enrich items missing offer/originalPrice from Product collection when possible\n            try {\n                const Product1 = __webpack_require__(/*! ../../../models/Product */ \"(api)/./models/Product.js\");\n                if (Array.isArray(serialized1.items) && serialized1.items.length > 0) {\n                    for(let i1 = 0; i1 < serialized1.items.length; i1++){\n                        const it1 = serialized1.items[i1];\n                        if (it1 && it1.productId && (!(\"offer\" in it1) || !(\"originalPrice\" in it1))) {\n                            try {\n                                const prod1 = await Product1.findById(it1.productId).lean();\n                                if (prod1) {\n                                    const base1 = Array.isArray(prod1.price) ? prod1.price[0] : prod1.price;\n                                    serialized1.items[i1].offer = (()=>{\n                                        const v = prod1.offer;\n                                        if (typeof v === \"boolean\") return v;\n                                        if (typeof v === \"string\") return [\n                                            \"true\",\n                                            \"1\",\n                                            \"yes\"\n                                        ].includes(v.toLowerCase().trim());\n                                        if (typeof v === \"number\") return v === 1;\n                                        return false;\n                                    })();\n                                    serialized1.items[i1].originalPrice = typeof base1 !== \"undefined\" && base1 !== null ? Number(base1) || null : null;\n                                }\n                            } catch (e4) {\n                            /* ignore per-item enrich errors */ }\n                        }\n                    }\n                }\n            } catch (e5) {\n            /* ignore enrichment errors */ }\n            try {\n                console.log(\"/api/cart GET for userId:\", userId, \"items:\", (serialized1.items || []).length);\n            } catch (e6) {}\n            return res.status(200).json(serialized1);\n        }\n        if (method === \"POST\") {\n            let { items , subtotal  } = req.body || {};\n            // Debug: log token/userId and incoming payload size to help diagnose merge-on-login\n            try {\n                const incomingCount = Array.isArray(items) ? items.length : items ? 1 : 0;\n                console.log(\"/api/cart POST token:\", token, \"userId:\", userId, \"incoming items:\", incomingCount);\n            } catch (e7) {\n            /* ignore logging errors */ }\n            // accept a non-array (single item) by coercing to array; keep empty array allowed\n            if (!Array.isArray(items) && items != null) {\n                items = [\n                    items\n                ];\n            }\n            if (items != null && !Array.isArray(items)) {\n                return res.status(400).json({\n                    message: \"items must be an array or null\"\n                });\n            }\n            // helper: normalize extras (ensure predictable order) and items\n            const normalizeExtras = (rawExtras)=>{\n                const arr = Array.isArray(rawExtras) ? rawExtras : [];\n                const cleaned = arr.map((e)=>({\n                        text: (e?.text || e?.name || \"\").trim(),\n                        price: Number(e?.price) || 0\n                    }));\n                // sort to make equality order-insensitive\n                cleaned.sort((a, b)=>a.text.localeCompare(b.text) || a.price - b.price);\n                return cleaned;\n            };\n            const parseOffer = (v)=>{\n                if (typeof v === \"boolean\") return v;\n                if (typeof v === \"string\") return [\n                    \"true\",\n                    \"1\",\n                    \"yes\"\n                ].includes(v.toLowerCase().trim());\n                if (typeof v === \"number\") return v === 1;\n                return false;\n            };\n            const normalized = Array.isArray(items) ? items.map((it)=>{\n                const extras = normalizeExtras(it.extras);\n                // productId: prefer _id or productId, only keep if valid ObjectId-like string\n                let productId = it._id || it.productId || null;\n                if (productId && typeof productId === \"string\" && mongoose__WEBPACK_IMPORTED_MODULE_2___default().Types.ObjectId.isValid(productId)) {\n                    productId = mongoose__WEBPACK_IMPORTED_MODULE_2___default().Types.ObjectId(productId);\n                } else {\n                    productId = null;\n                }\n                return {\n                    productId,\n                    title: (it.title || it.name || \"\").trim(),\n                    img: it.img || it.image || \"\",\n                    price: Number(it.price) || 0,\n                    quantity: Number(it.quantity) || 1,\n                    extras,\n                    // preserve whether client flagged this as an offer and original price if provided\n                    offer: parseOffer(it.offer),\n                    originalPrice: typeof it.originalPrice !== \"undefined\" ? Number(it.originalPrice) || null : null\n                };\n            }) : [];\n            // If subtotal not provided, compute it from normalized items\n            subtotal = Number(subtotal) || normalized.reduce((s, p)=>s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0);\n            // Find or create cart\n            let cart2;\n            try {\n                const { cartId: cartId1  } = req.body || {};\n                if (cartId1 && mongoose__WEBPACK_IMPORTED_MODULE_2___default().Types.ObjectId.isValid(cartId1)) {\n                    // update existing anonymous cart by id\n                    cart2 = await _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"].findById(cartId1);\n                    if (!cart2) {\n                        cart2 = new _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({\n                            items: normalized,\n                            subtotal\n                        });\n                    } else {\n                        cart2.items = normalized;\n                        cart2.subtotal = subtotal;\n                        cart2.updatedAt = new Date();\n                    }\n                } else if (userId) {\n                    cart2 = await _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"].findOne({\n                        user: userId\n                    });\n                    if (!cart2) {\n                        // no existing user cart: create one from normalized items\n                        cart2 = new _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({\n                            user: userId,\n                            items: normalized,\n                            subtotal\n                        });\n                    } else {\n                        // merge semantics: instead of overwriting, merge incoming normalized items into existing cart\n                        if (Array.isArray(normalized) && normalized.length > 0) {\n                            // build a map of existing items by a stable key\n                            const itemKey = (it)=>{\n                                const pid = it.productId ? String(it.productId) : null;\n                                const extrasKey = Array.isArray(it.extras) ? JSON.stringify(it.extras) : \"[]\";\n                                if (pid) return `pid:${pid}`;\n                                return `anon:${it.title || \"\"}|${Number(it.price) || 0}|${extrasKey}`;\n                            };\n                            const existing = Array.isArray(cart2.items) ? cart2.items.slice() : [];\n                            const map = new Map();\n                            existing.forEach((ex)=>{\n                                const key = itemKey(ex);\n                                map.set(key, {\n                                    ...ex\n                                });\n                            });\n                            normalized.forEach((inc)=>{\n                                const key = itemKey(inc);\n                                const found = map.get(key);\n                                if (found) {\n                                    // sum quantities and prefer incoming price/title/img\n                                    found.quantity = (Number(found.quantity) || 0) + (Number(inc.quantity) || 0);\n                                    found.price = Number(inc.price) || Number(found.price) || 0;\n                                    // preserve offer/originalPrice where incoming provides it\n                                    found.offer = typeof inc.offer !== \"undefined\" ? !!inc.offer : !!found.offer;\n                                    found.originalPrice = typeof inc.originalPrice !== \"undefined\" ? inc.originalPrice || found.originalPrice : found.originalPrice;\n                                    found.title = inc.title || found.title;\n                                    found.img = inc.img || found.img;\n                                    found.extras = inc.extras || found.extras;\n                                    map.set(key, found);\n                                } else {\n                                    map.set(key, {\n                                        ...inc\n                                    });\n                                }\n                            });\n                            // replace cart.items with merged array\n                            cart2.items = Array.from(map.values());\n                        } else {\n                            // if incoming items empty array, interpret as clearing the cart\n                            cart2.items = [];\n                        }\n                        // recompute subtotal from resulting items\n                        cart2.subtotal = Array.isArray(cart2.items) ? cart2.items.reduce((s, p)=>s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0) : 0;\n                        cart2.updatedAt = new Date();\n                    }\n                } else {\n                    // anonymous cart: create one-off cart record (no user)\n                    cart2 = new _models_Cart__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({\n                        items: normalized,\n                        subtotal\n                    });\n                }\n                const saved = await cart2.save();\n                const out = {\n                    ...saved.toObject(),\n                    _id: String(saved._id),\n                    user: saved.user ? String(saved.user) : null,\n                    createdAt: saved.createdAt ? saved.createdAt.toISOString() : null,\n                    updatedAt: saved.updatedAt ? saved.updatedAt.toISOString() : null\n                };\n                return res.status(201).json(out);\n            } catch (saveErr) {\n                console.error(\"/api/cart save error:\", saveErr);\n                // Return validation details if available\n                if (saveErr && saveErr.errors) {\n                    const details = Object.keys(saveErr.errors).reduce((acc, k)=>{\n                        acc[k] = saveErr.errors[k].message;\n                        return acc;\n                    }, {});\n                    return res.status(400).json({\n                        message: \"Validation failed\",\n                        details\n                    });\n                }\n                return res.status(500).json({\n                    message: saveErr.message || String(saveErr)\n                });\n            }\n        }\n        res.setHeader(\"Allow\", [\n            \"GET\",\n            \"POST\"\n        ]);\n        return res.status(405).end(`Method ${method} Not Allowed`);\n    } catch (err) {\n        console.error(\"/api/cart error:\", err);\n        return res.status(500).json({\n            message: err.message || String(err)\n        });\n    }\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9wYWdlcy9hcGkvY2FydC9pbmRleC5qcy5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7OztBQUEyQztBQUNKO0FBQ1I7QUFFL0IseUNBQXlDO0FBQzFCLGVBQWVHLFFBQVFDLEdBQUcsRUFBRUMsR0FBRyxFQUFFO0lBQzlDLE1BQU0sRUFBRUMsT0FBTSxFQUFFLEdBQUdGO0lBQ25CLE1BQU1HLFFBQVFILElBQUlJLE9BQU8sRUFBRUQ7SUFFM0IsSUFBSTtRQUNGLE1BQU1QLHVEQUFTQTtRQUVmLCtFQUErRTtRQUMvRSxJQUFJUyxTQUFTLElBQUk7UUFDakIsSUFBSUYsU0FBU0EsVUFBVUcsUUFBUUMsR0FBRyxDQUFDQyxLQUFLLEVBQUVILFNBQVNGO1FBRW5ELElBQUlELFdBQVcsT0FBTztZQUNwQixrRUFBa0U7WUFDbEUsTUFBTSxFQUFFTyxPQUFNLEVBQUUsR0FBR1QsSUFBSVUsS0FBSyxJQUFJLENBQUM7WUFDakMsSUFBSUQsUUFBUTtnQkFDVixJQUFJLENBQUNYLHNFQUErQixDQUFDVyxTQUFTLE9BQU9SLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUM7b0JBQUVDLFNBQVM7Z0JBQWlCO2dCQUN0RyxNQUFNQyxPQUFPLE1BQU1wQiw2REFBYSxDQUFDWSxRQUFRVSxJQUFJO2dCQUM3QyxJQUFJLENBQUNGLE1BQU0sT0FBT2hCLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUM7b0JBQUVLLE9BQU8sRUFBRTtvQkFBRUMsVUFBVTtnQkFBRTtnQkFDaEUsTUFBTUMsYUFBYTtvQkFDakIsR0FBR0wsSUFBSTtvQkFDUE0sS0FBS0MsT0FBT1AsS0FBS00sR0FBRztvQkFDcEJFLE1BQU1SLEtBQUtRLElBQUksR0FBR0QsT0FBT1AsS0FBS1EsSUFBSSxJQUFJLElBQUk7b0JBQzFDQyxXQUFXVCxLQUFLUyxTQUFTLEdBQUdULEtBQUtTLFNBQVMsQ0FBQ0MsV0FBVyxLQUFLLElBQUk7b0JBQy9EQyxXQUFXWCxLQUFLVyxTQUFTLEdBQUdYLEtBQUtXLFNBQVMsQ0FBQ0QsV0FBVyxLQUFLLElBQUk7Z0JBQ2pFO2dCQUNBLHVGQUF1RjtnQkFDdkYsSUFBSTtvQkFDRixNQUFNRSxVQUFVQyxtQkFBT0EsQ0FBQztvQkFDeEIsSUFBSUMsTUFBTUMsT0FBTyxDQUFDVixXQUFXRixLQUFLLEtBQUtFLFdBQVdGLEtBQUssQ0FBQ2EsTUFBTSxHQUFHLEdBQUc7d0JBQ2xFLElBQUssSUFBSUMsSUFBSSxHQUFHQSxJQUFJWixXQUFXRixLQUFLLENBQUNhLE1BQU0sRUFBRUMsSUFBSzs0QkFDaEQsTUFBTUMsS0FBS2IsV0FBV0YsS0FBSyxDQUFDYyxFQUFFOzRCQUM5QixJQUFJQyxNQUFNQSxHQUFHQyxTQUFTLElBQUssRUFBRSxZQUFXRCxFQUFDLEtBQU0sQ0FBRSxvQkFBbUJBLEVBQUMsQ0FBQyxHQUFJO2dDQUN4RSxJQUFJO29DQUNGLE1BQU1FLE9BQU8sTUFBTVIsUUFBUVgsUUFBUSxDQUFDaUIsR0FBR0MsU0FBUyxFQUFFakIsSUFBSTtvQ0FDdEQsSUFBSWtCLE1BQU07d0NBQ1IsaURBQWlEO3dDQUNqRCxNQUFNQyxPQUFPUCxNQUFNQyxPQUFPLENBQUNLLEtBQUtFLEtBQUssSUFBSUYsS0FBS0UsS0FBSyxDQUFDLEVBQUUsR0FBR0YsS0FBS0UsS0FBSzt3Q0FDbkVqQixXQUFXRixLQUFLLENBQUNjLEVBQUUsQ0FBQ00sS0FBSyxHQUFHLENBQUMsSUFBTTs0Q0FDakMsTUFBTUMsSUFBSUosS0FBS0csS0FBSzs0Q0FDcEIsSUFBSSxPQUFPQyxNQUFNLFdBQVcsT0FBT0E7NENBQ25DLElBQUksT0FBT0EsTUFBTSxVQUFVLE9BQU87Z0RBQUM7Z0RBQU87Z0RBQUk7NkNBQU0sQ0FBQ0MsUUFBUSxDQUFDRCxFQUFFRSxXQUFXLEdBQUdDLElBQUk7NENBQ2xGLElBQUksT0FBT0gsTUFBTSxVQUFVLE9BQU9BLE1BQU07NENBQ3hDLE9BQU8sS0FBSzt3Q0FDZDt3Q0FDQW5CLFdBQVdGLEtBQUssQ0FBQ2MsRUFBRSxDQUFDVyxhQUFhLEdBQUcsT0FBT1AsU0FBUyxlQUFlQSxTQUFTLElBQUksR0FBR1EsT0FBT1IsU0FBUyxJQUFJLEdBQUcsSUFBSTtvQ0FDaEgsQ0FBQztnQ0FDSCxFQUFFLE9BQU9TLEdBQUc7Z0NBQ1YsaUNBQWlDLEdBQ25DOzRCQUNGLENBQUM7d0JBQ0g7b0JBQ0YsQ0FBQztnQkFDSCxFQUFFLE9BQU9BLElBQUc7Z0JBQ1YsNEJBQTRCLEdBQzlCO2dCQUNBLElBQUk7b0JBQUVDLFFBQVFDLEdBQUcsQ0FBQyw0QkFBNEJ4QyxRQUFRLFVBQVUsQ0FBQ2EsV0FBV0YsS0FBSyxJQUFJLEVBQUUsRUFBRWEsTUFBTTtnQkFBRSxFQUFFLE9BQU9jLElBQUcsQ0FBQztnQkFDOUcsT0FBTzlDLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUNPO1lBQzlCLENBQUM7WUFFRCxJQUFJLENBQUNqQixRQUFRLE9BQU9KLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUM7Z0JBQUVLLE9BQU8sRUFBRTtnQkFBRUMsVUFBVTtZQUFFO1lBQ2xFLE1BQU1KLFFBQU8sTUFBTXBCLDREQUFZLENBQUM7Z0JBQUU0QixNQUFNcEI7WUFBTyxHQUFHYyxJQUFJO1lBQ3RELElBQUksQ0FBQ0YsT0FBTTtnQkFDVCxJQUFJO29CQUFFK0IsUUFBUUMsR0FBRyxDQUFDLDZCQUE2QjVDLFFBQVE7Z0JBQWlCLEVBQUUsT0FBTzBDLElBQUcsQ0FBQztnQkFDckYsT0FBTzlDLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUM7b0JBQUVLLE9BQU8sRUFBRTtvQkFBRUMsVUFBVTtnQkFBRTtZQUN2RCxDQUFDO1lBQ0QsWUFBWTtZQUNaLE1BQU1DLGNBQWE7Z0JBQ2pCLEdBQUdMLEtBQUk7Z0JBQ1BNLEtBQUtDLE9BQU9QLE1BQUtNLEdBQUc7Z0JBQ3BCRSxNQUFNUixNQUFLUSxJQUFJLEdBQUdELE9BQU9QLE1BQUtRLElBQUksSUFBSSxJQUFJO2dCQUMxQ0MsV0FBV1QsTUFBS1MsU0FBUyxHQUFHVCxNQUFLUyxTQUFTLENBQUNDLFdBQVcsS0FBSyxJQUFJO2dCQUMvREMsV0FBV1gsTUFBS1csU0FBUyxHQUFHWCxNQUFLVyxTQUFTLENBQUNELFdBQVcsS0FBSyxJQUFJO1lBQ2pFO1lBQ0EsaUZBQWlGO1lBQ2pGLElBQUk7Z0JBQ0YsTUFBTUUsV0FBVUMsbUJBQU9BLENBQUM7Z0JBQ3hCLElBQUlDLE1BQU1DLE9BQU8sQ0FBQ1YsWUFBV0YsS0FBSyxLQUFLRSxZQUFXRixLQUFLLENBQUNhLE1BQU0sR0FBRyxHQUFHO29CQUNsRSxJQUFLLElBQUlDLEtBQUksR0FBR0EsS0FBSVosWUFBV0YsS0FBSyxDQUFDYSxNQUFNLEVBQUVDLEtBQUs7d0JBQ2hELE1BQU1DLE1BQUtiLFlBQVdGLEtBQUssQ0FBQ2MsR0FBRTt3QkFDOUIsSUFBSUMsT0FBTUEsSUFBR0MsU0FBUyxJQUFLLEVBQUUsWUFBV0QsR0FBQyxLQUFNLENBQUUsb0JBQW1CQSxHQUFDLENBQUMsR0FBSTs0QkFDeEUsSUFBSTtnQ0FDRixNQUFNRSxRQUFPLE1BQU1SLFNBQVFYLFFBQVEsQ0FBQ2lCLElBQUdDLFNBQVMsRUFBRWpCLElBQUk7Z0NBQ3RELElBQUlrQixPQUFNO29DQUNSLE1BQU1DLFFBQU9QLE1BQU1DLE9BQU8sQ0FBQ0ssTUFBS0UsS0FBSyxJQUFJRixNQUFLRSxLQUFLLENBQUMsRUFBRSxHQUFHRixNQUFLRSxLQUFLO29DQUNuRWpCLFlBQVdGLEtBQUssQ0FBQ2MsR0FBRSxDQUFDTSxLQUFLLEdBQUcsQ0FBQyxJQUFNO3dDQUNqQyxNQUFNQyxJQUFJSixNQUFLRyxLQUFLO3dDQUNwQixJQUFJLE9BQU9DLE1BQU0sV0FBVyxPQUFPQTt3Q0FDbkMsSUFBSSxPQUFPQSxNQUFNLFVBQVUsT0FBTzs0Q0FBQzs0Q0FBTzs0Q0FBSTt5Q0FBTSxDQUFDQyxRQUFRLENBQUNELEVBQUVFLFdBQVcsR0FBR0MsSUFBSTt3Q0FDbEYsSUFBSSxPQUFPSCxNQUFNLFVBQVUsT0FBT0EsTUFBTTt3Q0FDeEMsT0FBTyxLQUFLO29DQUNkO29DQUNBbkIsWUFBV0YsS0FBSyxDQUFDYyxHQUFFLENBQUNXLGFBQWEsR0FBRyxPQUFPUCxVQUFTLGVBQWVBLFVBQVMsSUFBSSxHQUFHUSxPQUFPUixVQUFTLElBQUksR0FBRyxJQUFJO2dDQUNoSCxDQUFDOzRCQUNILEVBQUUsT0FBT1MsSUFBRzs0QkFDVixpQ0FBaUMsR0FDbkM7d0JBQ0YsQ0FBQztvQkFDSDtnQkFDRixDQUFDO1lBQ0gsRUFBRSxPQUFPQSxJQUFHO1lBQ1YsNEJBQTRCLEdBQzlCO1lBQ0osSUFBSTtnQkFBRUMsUUFBUUMsR0FBRyxDQUFDLDZCQUE2QjVDLFFBQVEsVUFBVSxDQUFDaUIsWUFBV0YsS0FBSyxJQUFJLEVBQUUsRUFBRWEsTUFBTTtZQUFFLEVBQUUsT0FBT2MsSUFBRyxDQUFDO1lBQy9HLE9BQU85QyxJQUFJYSxNQUFNLENBQUMsS0FBS0MsSUFBSSxDQUFDTztRQUMxQixDQUFDO1FBRUQsSUFBSXBCLFdBQVcsUUFBUTtZQUNyQixJQUFJLEVBQUVrQixNQUFLLEVBQUVDLFNBQVEsRUFBRSxHQUFHckIsSUFBSW1ELElBQUksSUFBSSxDQUFDO1lBRXZDLG9GQUFvRjtZQUNwRixJQUFJO2dCQUNGLE1BQU1DLGdCQUFnQnJCLE1BQU1DLE9BQU8sQ0FBQ1osU0FBU0EsTUFBTWEsTUFBTSxHQUFHYixRQUFRLElBQUksQ0FBQztnQkFDekU0QixRQUFRQyxHQUFHLENBQUMseUJBQXlCOUMsT0FBTyxXQUFXRSxRQUFRLG1CQUFtQitDO1lBQ3BGLEVBQUUsT0FBT0wsSUFBRztZQUNWLHlCQUF5QixHQUMzQjtZQUVBLGtGQUFrRjtZQUNsRixJQUFJLENBQUNoQixNQUFNQyxPQUFPLENBQUNaLFVBQVVBLFNBQVMsSUFBSSxFQUFFO2dCQUMxQ0EsUUFBUTtvQkFBQ0E7aUJBQU07WUFDakIsQ0FBQztZQUVELElBQUlBLFNBQVMsSUFBSSxJQUFJLENBQUNXLE1BQU1DLE9BQU8sQ0FBQ1osUUFBUTtnQkFDMUMsT0FBT25CLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUM7b0JBQUVDLFNBQVM7Z0JBQWlDO1lBQzFFLENBQUM7WUFFRCxnRUFBZ0U7WUFDaEUsTUFBTXFDLGtCQUFrQixDQUFDQyxZQUFjO2dCQUNyQyxNQUFNQyxNQUFNeEIsTUFBTUMsT0FBTyxDQUFDc0IsYUFBYUEsWUFBWSxFQUFFO2dCQUNyRCxNQUFNRSxVQUFVRCxJQUFJRSxHQUFHLENBQUMsQ0FBQ1YsSUFBTzt3QkFBRVcsTUFBTSxDQUFDWCxHQUFHVyxRQUFRWCxHQUFHWSxRQUFRLEVBQUMsRUFBR2YsSUFBSTt3QkFBSUwsT0FBT08sT0FBT0MsR0FBR1IsVUFBVTtvQkFBRTtnQkFDeEcsMENBQTBDO2dCQUMxQ2lCLFFBQVFJLElBQUksQ0FBQyxDQUFDQyxHQUFHQyxJQUFNRCxFQUFFSCxJQUFJLENBQUNLLGFBQWEsQ0FBQ0QsRUFBRUosSUFBSSxLQUFLRyxFQUFFdEIsS0FBSyxHQUFHdUIsRUFBRXZCLEtBQUs7Z0JBQ3hFLE9BQU9pQjtZQUNUO1lBRUEsTUFBTVEsYUFBYSxDQUFDdkIsSUFBTTtnQkFDeEIsSUFBSSxPQUFPQSxNQUFNLFdBQVcsT0FBT0E7Z0JBQ25DLElBQUksT0FBT0EsTUFBTSxVQUFVLE9BQU87b0JBQUM7b0JBQVE7b0JBQUs7aUJBQU0sQ0FBQ0MsUUFBUSxDQUFDRCxFQUFFRSxXQUFXLEdBQUdDLElBQUk7Z0JBQ3BGLElBQUksT0FBT0gsTUFBTSxVQUFVLE9BQU9BLE1BQU07Z0JBQ3hDLE9BQU8sS0FBSztZQUNkO1lBRUEsTUFBTXdCLGFBQWFsQyxNQUFNQyxPQUFPLENBQUNaLFNBQzdCQSxNQUFNcUMsR0FBRyxDQUFDLENBQUN0QixLQUFPO2dCQUNoQixNQUFNK0IsU0FBU2IsZ0JBQWdCbEIsR0FBRytCLE1BQU07Z0JBRXhDLDhFQUE4RTtnQkFDOUUsSUFBSTlCLFlBQVlELEdBQUdaLEdBQUcsSUFBSVksR0FBR0MsU0FBUyxJQUFJLElBQUk7Z0JBQzlDLElBQUlBLGFBQWEsT0FBT0EsY0FBYyxZQUFZdEMsc0VBQStCLENBQUNzQyxZQUFZO29CQUM1RkEsWUFBWXRDLDhEQUF1QixDQUFDc0M7Z0JBQ3RDLE9BQU87b0JBQ0xBLFlBQVksSUFBSTtnQkFDbEIsQ0FBQztnQkFFRCxPQUFPO29CQUNMQTtvQkFDQStCLE9BQU8sQ0FBQ2hDLEdBQUdnQyxLQUFLLElBQUloQyxHQUFHd0IsSUFBSSxJQUFJLEVBQUMsRUFBR2YsSUFBSTtvQkFDdkN3QixLQUFLakMsR0FBR2lDLEdBQUcsSUFBSWpDLEdBQUdrQyxLQUFLLElBQUk7b0JBQzNCOUIsT0FBT08sT0FBT1gsR0FBR0ksS0FBSyxLQUFLO29CQUMzQitCLFVBQVV4QixPQUFPWCxHQUFHbUMsUUFBUSxLQUFLO29CQUNqQ0o7b0JBQ0Esa0ZBQWtGO29CQUNsRjFCLE9BQU93QixXQUFXN0IsR0FBR0ssS0FBSztvQkFDMUJLLGVBQWUsT0FBT1YsR0FBR1UsYUFBYSxLQUFLLGNBQWNDLE9BQU9YLEdBQUdVLGFBQWEsS0FBSyxJQUFJLEdBQUcsSUFBSTtnQkFDbEc7WUFDRixLQUNBLEVBQUU7WUFFTiw2REFBNkQ7WUFDN0R4QixXQUFXeUIsT0FBT3pCLGFBQWE0QyxXQUFXTSxNQUFNLENBQUMsQ0FBQ0MsR0FBR0MsSUFBTUQsSUFBSSxDQUFDMUIsT0FBTzJCLEVBQUVsQyxLQUFLLEtBQUssS0FBTU8sQ0FBQUEsT0FBTzJCLEVBQUVILFFBQVEsS0FBSyxJQUFJO1lBRW5ILHNCQUFzQjtZQUN0QixJQUFJckQ7WUFDSixJQUFJO2dCQUNGLE1BQU0sRUFBRVIsUUFBQUEsUUFBTSxFQUFFLEdBQUdULElBQUltRCxJQUFJLElBQUksQ0FBQztnQkFDaEMsSUFBSTFDLFdBQVVYLHNFQUErQixDQUFDVyxVQUFTO29CQUNyRCx1Q0FBdUM7b0JBQ3ZDUSxRQUFPLE1BQU1wQiw2REFBYSxDQUFDWTtvQkFDM0IsSUFBSSxDQUFDUSxPQUFNO3dCQUNUQSxRQUFPLElBQUlwQixvREFBSUEsQ0FBQzs0QkFBRXVCLE9BQU82Qzs0QkFBWTVDO3dCQUFTO29CQUNoRCxPQUFPO3dCQUNMSixNQUFLRyxLQUFLLEdBQUc2Qzt3QkFDYmhELE1BQUtJLFFBQVEsR0FBR0E7d0JBQ2hCSixNQUFLVyxTQUFTLEdBQUcsSUFBSThDO29CQUN2QixDQUFDO2dCQUNILE9BQU8sSUFBSXJFLFFBQVE7b0JBQ2pCWSxRQUFPLE1BQU1wQiw0REFBWSxDQUFDO3dCQUFFNEIsTUFBTXBCO29CQUFPO29CQUN6QyxJQUFJLENBQUNZLE9BQU07d0JBQ1QsMERBQTBEO3dCQUMxREEsUUFBTyxJQUFJcEIsb0RBQUlBLENBQUM7NEJBQUU0QixNQUFNcEI7NEJBQVFlLE9BQU82Qzs0QkFBWTVDO3dCQUFTO29CQUM5RCxPQUFPO3dCQUNMLDhGQUE4Rjt3QkFDOUYsSUFBSVUsTUFBTUMsT0FBTyxDQUFDaUMsZUFBZUEsV0FBV2hDLE1BQU0sR0FBRyxHQUFHOzRCQUN0RCxnREFBZ0Q7NEJBQ2hELE1BQU0wQyxVQUFVLENBQUN4QyxLQUFPO2dDQUN0QixNQUFNeUMsTUFBTXpDLEdBQUdDLFNBQVMsR0FBR1osT0FBT1csR0FBR0MsU0FBUyxJQUFJLElBQUk7Z0NBQ3RELE1BQU15QyxZQUFZOUMsTUFBTUMsT0FBTyxDQUFDRyxHQUFHK0IsTUFBTSxJQUFJWSxLQUFLQyxTQUFTLENBQUM1QyxHQUFHK0IsTUFBTSxJQUFJLElBQUk7Z0NBQzdFLElBQUlVLEtBQUssT0FBTyxDQUFDLElBQUksRUFBRUEsSUFBSSxDQUFDO2dDQUM1QixPQUFPLENBQUMsS0FBSyxFQUFHekMsR0FBR2dDLEtBQUssSUFBSSxHQUFJLENBQUMsRUFBRXJCLE9BQU9YLEdBQUdJLEtBQUssS0FBSyxFQUFFLENBQUMsRUFBRXNDLFVBQVUsQ0FBQzs0QkFDekU7NEJBRUEsTUFBTUcsV0FBV2pELE1BQU1DLE9BQU8sQ0FBQ2YsTUFBS0csS0FBSyxJQUFJSCxNQUFLRyxLQUFLLENBQUM2RCxLQUFLLEtBQUssRUFBRTs0QkFDcEUsTUFBTXhCLE1BQU0sSUFBSXlCOzRCQUNoQkYsU0FBU0csT0FBTyxDQUFDLENBQUNDLEtBQU87Z0NBQ3ZCLE1BQU1DLE1BQU1WLFFBQVFTO2dDQUNwQjNCLElBQUk2QixHQUFHLENBQUNELEtBQUs7b0NBQUUsR0FBR0QsRUFBRTtnQ0FBQzs0QkFDdkI7NEJBRUluQixXQUFXa0IsT0FBTyxDQUFDLENBQUNJLE1BQVE7Z0NBQzlCLE1BQU1GLE1BQU1WLFFBQVFZO2dDQUNwQixNQUFNQyxRQUFRL0IsSUFBSWdDLEdBQUcsQ0FBQ0o7Z0NBQ3RCLElBQUlHLE9BQU87b0NBQ1QscURBQXFEO29DQUNyREEsTUFBTWxCLFFBQVEsR0FBRyxDQUFDeEIsT0FBTzBDLE1BQU1sQixRQUFRLEtBQUssS0FBTXhCLENBQUFBLE9BQU95QyxJQUFJakIsUUFBUSxLQUFLO29DQUMxRWtCLE1BQU1qRCxLQUFLLEdBQUdPLE9BQU95QyxJQUFJaEQsS0FBSyxLQUFLTyxPQUFPMEMsTUFBTWpELEtBQUssS0FBSztvQ0FDMUQsMERBQTBEO29DQUMxRGlELE1BQU1oRCxLQUFLLEdBQUcsT0FBUStDLElBQUkvQyxLQUFLLEtBQUssY0FBZSxDQUFDLENBQUMrQyxJQUFJL0MsS0FBSyxHQUFHLENBQUMsQ0FBQ2dELE1BQU1oRCxLQUFLO29DQUM5RWdELE1BQU0zQyxhQUFhLEdBQUcsT0FBTzBDLElBQUkxQyxhQUFhLEtBQUssY0FBYzBDLElBQUkxQyxhQUFhLElBQUkyQyxNQUFNM0MsYUFBYSxHQUFHMkMsTUFBTTNDLGFBQWE7b0NBQy9IMkMsTUFBTXJCLEtBQUssR0FBR29CLElBQUlwQixLQUFLLElBQUlxQixNQUFNckIsS0FBSztvQ0FDdENxQixNQUFNcEIsR0FBRyxHQUFHbUIsSUFBSW5CLEdBQUcsSUFBSW9CLE1BQU1wQixHQUFHO29DQUNoQ29CLE1BQU10QixNQUFNLEdBQUdxQixJQUFJckIsTUFBTSxJQUFJc0IsTUFBTXRCLE1BQU07b0NBQ3pDVCxJQUFJNkIsR0FBRyxDQUFDRCxLQUFLRztnQ0FDZixPQUFPO29DQUNML0IsSUFBSTZCLEdBQUcsQ0FBQ0QsS0FBSzt3Q0FBRSxHQUFHRSxHQUFHO29DQUFDO2dDQUN4QixDQUFDOzRCQUNIOzRCQUVBLHVDQUF1Qzs0QkFDdkN0RSxNQUFLRyxLQUFLLEdBQUdXLE1BQU0yRCxJQUFJLENBQUNqQyxJQUFJa0MsTUFBTTt3QkFDcEMsT0FBTzs0QkFDTCxnRUFBZ0U7NEJBQ2hFMUUsTUFBS0csS0FBSyxHQUFHLEVBQUU7d0JBQ2pCLENBQUM7d0JBRUQsMENBQTBDO3dCQUMxQ0gsTUFBS0ksUUFBUSxHQUFHVSxNQUFNQyxPQUFPLENBQUNmLE1BQUtHLEtBQUssSUFDcENILE1BQUtHLEtBQUssQ0FBQ21ELE1BQU0sQ0FBQyxDQUFDQyxHQUFHQyxJQUFNRCxJQUFJLENBQUMxQixPQUFPMkIsRUFBRWxDLEtBQUssS0FBSyxLQUFNTyxDQUFBQSxPQUFPMkIsRUFBRUgsUUFBUSxLQUFLLElBQUksS0FDcEYsQ0FBQzt3QkFDTHJELE1BQUtXLFNBQVMsR0FBRyxJQUFJOEM7b0JBQ3ZCLENBQUM7Z0JBQ0gsT0FBTztvQkFDTCx1REFBdUQ7b0JBQ3ZEekQsUUFBTyxJQUFJcEIsb0RBQUlBLENBQUM7d0JBQUV1QixPQUFPNkM7d0JBQVk1QztvQkFBUztnQkFDaEQsQ0FBQztnQkFFRCxNQUFNdUUsUUFBUSxNQUFNM0UsTUFBSzRFLElBQUk7Z0JBQzdCLE1BQU1DLE1BQU07b0JBQ1YsR0FBR0YsTUFBTUcsUUFBUSxFQUFFO29CQUNuQnhFLEtBQUtDLE9BQU9vRSxNQUFNckUsR0FBRztvQkFDckJFLE1BQU1tRSxNQUFNbkUsSUFBSSxHQUFHRCxPQUFPb0UsTUFBTW5FLElBQUksSUFBSSxJQUFJO29CQUM1Q0MsV0FBV2tFLE1BQU1sRSxTQUFTLEdBQUdrRSxNQUFNbEUsU0FBUyxDQUFDQyxXQUFXLEtBQUssSUFBSTtvQkFDakVDLFdBQVdnRSxNQUFNaEUsU0FBUyxHQUFHZ0UsTUFBTWhFLFNBQVMsQ0FBQ0QsV0FBVyxLQUFLLElBQUk7Z0JBQ25FO2dCQUNBLE9BQU8xQixJQUFJYSxNQUFNLENBQUMsS0FBS0MsSUFBSSxDQUFDK0U7WUFDOUIsRUFBRSxPQUFPRSxTQUFTO2dCQUNoQmhELFFBQVFpRCxLQUFLLENBQUMseUJBQXlCRDtnQkFDdkMseUNBQXlDO2dCQUN6QyxJQUFJQSxXQUFXQSxRQUFRRSxNQUFNLEVBQUU7b0JBQzdCLE1BQU1DLFVBQVVDLE9BQU9DLElBQUksQ0FBQ0wsUUFBUUUsTUFBTSxFQUFFM0IsTUFBTSxDQUFDLENBQUMrQixLQUFLQyxJQUFNO3dCQUM3REQsR0FBRyxDQUFDQyxFQUFFLEdBQUdQLFFBQVFFLE1BQU0sQ0FBQ0ssRUFBRSxDQUFDdkYsT0FBTzt3QkFDbEMsT0FBT3NGO29CQUNULEdBQUcsQ0FBQztvQkFDSixPQUFPckcsSUFBSWEsTUFBTSxDQUFDLEtBQUtDLElBQUksQ0FBQzt3QkFBRUMsU0FBUzt3QkFBcUJtRjtvQkFBUTtnQkFDdEUsQ0FBQztnQkFDRCxPQUFPbEcsSUFBSWEsTUFBTSxDQUFDLEtBQUtDLElBQUksQ0FBQztvQkFBRUMsU0FBU2dGLFFBQVFoRixPQUFPLElBQUlRLE9BQU93RTtnQkFBUztZQUM1RTtRQUNGLENBQUM7UUFFRC9GLElBQUl1RyxTQUFTLENBQUMsU0FBUztZQUFDO1lBQU87U0FBTztRQUN0QyxPQUFPdkcsSUFBSWEsTUFBTSxDQUFDLEtBQUsyRixHQUFHLENBQUMsQ0FBQyxPQUFPLEVBQUV2RyxPQUFPLFlBQVksQ0FBQztJQUMzRCxFQUFFLE9BQU93RyxLQUFLO1FBQ1oxRCxRQUFRaUQsS0FBSyxDQUFDLG9CQUFvQlM7UUFDbEMsT0FBT3pHLElBQUlhLE1BQU0sQ0FBQyxLQUFLQyxJQUFJLENBQUM7WUFBRUMsU0FBUzBGLElBQUkxRixPQUFPLElBQUlRLE9BQU9rRjtRQUFLO0lBQ3BFO0FBQ0YsQ0FBQyIsInNvdXJjZXMiOlsid2VicGFjazovL251dGlsbGEtZmFzdC8uL3BhZ2VzL2FwaS9jYXJ0L2luZGV4LmpzPzIzY2IiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGRiQ29ubmVjdCBmcm9tICcuLi8uLi8uLi91dGlsL21vbmdvJ1xyXG5pbXBvcnQgQ2FydCBmcm9tICcuLi8uLi8uLi9tb2RlbHMvQ2FydCdcclxuaW1wb3J0IG1vbmdvb3NlIGZyb20gJ21vbmdvb3NlJ1xyXG5cclxuLy8gRGV2L1Byb2Q6IHNpbXBsZSBjYXJ0IHBlcnNpc3RlbmNlIEFQSXNcclxuZXhwb3J0IGRlZmF1bHQgYXN5bmMgZnVuY3Rpb24gaGFuZGxlcihyZXEsIHJlcykge1xyXG4gIGNvbnN0IHsgbWV0aG9kIH0gPSByZXFcclxuICBjb25zdCB0b2tlbiA9IHJlcS5jb29raWVzPy50b2tlblxyXG5cclxuICB0cnkge1xyXG4gICAgYXdhaXQgZGJDb25uZWN0KClcclxuXHJcbiAgICAvLyByZXNvbHZlIHVzZXIgaWQgZnJvbSB0b2tlbiAoZGV2OiB0b2tlbiA9PT0gdXNlcklkLCBhZG1pbiB0b2tlbiBpcyBlbnYgVE9LRU4pXHJcbiAgICBsZXQgdXNlcklkID0gbnVsbFxyXG4gICAgaWYgKHRva2VuICYmIHRva2VuICE9PSBwcm9jZXNzLmVudi5UT0tFTikgdXNlcklkID0gdG9rZW5cclxuXHJcbiAgICBpZiAobWV0aG9kID09PSAnR0VUJykge1xyXG4gICAgICAvLyBhbGxvdyBmZXRjaGluZyBieSBjYXJ0SWQgKGFub255bW91cyBjYXJ0cykgb3IgYnkgbG9nZ2VkLWluIHVzZXJcclxuICAgICAgY29uc3QgeyBjYXJ0SWQgfSA9IHJlcS5xdWVyeSB8fCB7fVxyXG4gICAgICBpZiAoY2FydElkKSB7XHJcbiAgICAgICAgaWYgKCFtb25nb29zZS5UeXBlcy5PYmplY3RJZC5pc1ZhbGlkKGNhcnRJZCkpIHJldHVybiByZXMuc3RhdHVzKDQwMCkuanNvbih7IG1lc3NhZ2U6ICdpbnZhbGlkIGNhcnRJZCcgfSlcclxuICAgICAgICBjb25zdCBjYXJ0ID0gYXdhaXQgQ2FydC5maW5kQnlJZChjYXJ0SWQpLmxlYW4oKVxyXG4gICAgICAgIGlmICghY2FydCkgcmV0dXJuIHJlcy5zdGF0dXMoMjAwKS5qc29uKHsgaXRlbXM6IFtdLCBzdWJ0b3RhbDogMCB9KVxyXG4gICAgICAgIGNvbnN0IHNlcmlhbGl6ZWQgPSB7XHJcbiAgICAgICAgICAuLi5jYXJ0LFxyXG4gICAgICAgICAgX2lkOiBTdHJpbmcoY2FydC5faWQpLFxyXG4gICAgICAgICAgdXNlcjogY2FydC51c2VyID8gU3RyaW5nKGNhcnQudXNlcikgOiBudWxsLFxyXG4gICAgICAgICAgY3JlYXRlZEF0OiBjYXJ0LmNyZWF0ZWRBdCA/IGNhcnQuY3JlYXRlZEF0LnRvSVNPU3RyaW5nKCkgOiBudWxsLFxyXG4gICAgICAgICAgdXBkYXRlZEF0OiBjYXJ0LnVwZGF0ZWRBdCA/IGNhcnQudXBkYXRlZEF0LnRvSVNPU3RyaW5nKCkgOiBudWxsLFxyXG4gICAgICAgIH1cclxuICAgICAgICAvLyBJZiBzdG9yZWQgaXRlbXMgbGFjayBvZmZlci9vcmlnaW5hbFByaWNlLCB0cnkgdG8gZW5yaWNoIHRoZW0gZnJvbSBQcm9kdWN0IGNvbGxlY3Rpb25cclxuICAgICAgICB0cnkge1xyXG4gICAgICAgICAgY29uc3QgUHJvZHVjdCA9IHJlcXVpcmUoJy4uLy4uLy4uL21vZGVscy9Qcm9kdWN0JylcclxuICAgICAgICAgIGlmIChBcnJheS5pc0FycmF5KHNlcmlhbGl6ZWQuaXRlbXMpICYmIHNlcmlhbGl6ZWQuaXRlbXMubGVuZ3RoID4gMCkge1xyXG4gICAgICAgICAgICBmb3IgKGxldCBpID0gMDsgaSA8IHNlcmlhbGl6ZWQuaXRlbXMubGVuZ3RoOyBpKyspIHtcclxuICAgICAgICAgICAgICBjb25zdCBpdCA9IHNlcmlhbGl6ZWQuaXRlbXNbaV1cclxuICAgICAgICAgICAgICBpZiAoaXQgJiYgaXQucHJvZHVjdElkICYmICghKCdvZmZlcicgaW4gaXQpIHx8ICEoJ29yaWdpbmFsUHJpY2UnIGluIGl0KSkpIHtcclxuICAgICAgICAgICAgICAgIHRyeSB7XHJcbiAgICAgICAgICAgICAgICAgIGNvbnN0IHByb2QgPSBhd2FpdCBQcm9kdWN0LmZpbmRCeUlkKGl0LnByb2R1Y3RJZCkubGVhbigpXHJcbiAgICAgICAgICAgICAgICAgIGlmIChwcm9kKSB7XHJcbiAgICAgICAgICAgICAgICAgICAgLy8gZGVyaXZlIG9yaWdpbmFsIHByaWNlIGZyb20gcHJvZHVjdCBwcmljZSBmaWVsZFxyXG4gICAgICAgICAgICAgICAgICAgIGNvbnN0IGJhc2UgPSBBcnJheS5pc0FycmF5KHByb2QucHJpY2UpID8gcHJvZC5wcmljZVswXSA6IHByb2QucHJpY2VcclxuICAgICAgICAgICAgICAgICAgICBzZXJpYWxpemVkLml0ZW1zW2ldLm9mZmVyID0gKCgpID0+IHtcclxuICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHYgPSBwcm9kLm9mZmVyXHJcbiAgICAgICAgICAgICAgICAgICAgICBpZiAodHlwZW9mIHYgPT09ICdib29sZWFuJykgcmV0dXJuIHZcclxuICAgICAgICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgdiA9PT0gJ3N0cmluZycpIHJldHVybiBbJ3RydWUnLCcxJywneWVzJ10uaW5jbHVkZXModi50b0xvd2VyQ2FzZSgpLnRyaW0oKSlcclxuICAgICAgICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgdiA9PT0gJ251bWJlcicpIHJldHVybiB2ID09PSAxXHJcbiAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gZmFsc2VcclxuICAgICAgICAgICAgICAgICAgICB9KSgpXHJcbiAgICAgICAgICAgICAgICAgICAgc2VyaWFsaXplZC5pdGVtc1tpXS5vcmlnaW5hbFByaWNlID0gdHlwZW9mIGJhc2UgIT09ICd1bmRlZmluZWQnICYmIGJhc2UgIT09IG51bGwgPyBOdW1iZXIoYmFzZSkgfHwgbnVsbCA6IG51bGxcclxuICAgICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAgICAgfSBjYXRjaCAoZSkge1xyXG4gICAgICAgICAgICAgICAgICAvKiBpZ25vcmUgcGVyLWl0ZW0gZW5yaWNoIGVycm9ycyAqL1xyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgfVxyXG4gICAgICAgIH0gY2F0Y2ggKGUpIHtcclxuICAgICAgICAgIC8qIGlnbm9yZSBlbnJpY2htZW50IGVycm9ycyAqL1xyXG4gICAgICAgIH1cclxuICAgICAgICB0cnkgeyBjb25zb2xlLmxvZygnL2FwaS9jYXJ0IEdFVCBieSBjYXJ0SWQ6JywgY2FydElkLCAnaXRlbXM6JywgKHNlcmlhbGl6ZWQuaXRlbXMgfHwgW10pLmxlbmd0aCkgfSBjYXRjaCAoZSkge31cclxuICAgICAgICByZXR1cm4gcmVzLnN0YXR1cygyMDApLmpzb24oc2VyaWFsaXplZClcclxuICAgICAgfVxyXG5cclxuICAgICAgaWYgKCF1c2VySWQpIHJldHVybiByZXMuc3RhdHVzKDIwMCkuanNvbih7IGl0ZW1zOiBbXSwgc3VidG90YWw6IDAgfSlcclxuICAgICAgY29uc3QgY2FydCA9IGF3YWl0IENhcnQuZmluZE9uZSh7IHVzZXI6IHVzZXJJZCB9KS5sZWFuKClcclxuICAgICAgaWYgKCFjYXJ0KSB7XHJcbiAgICAgICAgdHJ5IHsgY29uc29sZS5sb2coJy9hcGkvY2FydCBHRVQgZm9yIHVzZXJJZDonLCB1c2VySWQsICdubyBjYXJ0IGZvdW5kJykgfSBjYXRjaCAoZSkge31cclxuICAgICAgICByZXR1cm4gcmVzLnN0YXR1cygyMDApLmpzb24oeyBpdGVtczogW10sIHN1YnRvdGFsOiAwIH0pXHJcbiAgICAgIH1cclxuICAgICAgLy8gc2VyaWFsaXplXHJcbiAgICAgIGNvbnN0IHNlcmlhbGl6ZWQgPSB7XHJcbiAgICAgICAgLi4uY2FydCxcclxuICAgICAgICBfaWQ6IFN0cmluZyhjYXJ0Ll9pZCksXHJcbiAgICAgICAgdXNlcjogY2FydC51c2VyID8gU3RyaW5nKGNhcnQudXNlcikgOiBudWxsLFxyXG4gICAgICAgIGNyZWF0ZWRBdDogY2FydC5jcmVhdGVkQXQgPyBjYXJ0LmNyZWF0ZWRBdC50b0lTT1N0cmluZygpIDogbnVsbCxcclxuICAgICAgICB1cGRhdGVkQXQ6IGNhcnQudXBkYXRlZEF0ID8gY2FydC51cGRhdGVkQXQudG9JU09TdHJpbmcoKSA6IG51bGwsXHJcbiAgICAgIH1cclxuICAgICAgLy8gRW5yaWNoIGl0ZW1zIG1pc3Npbmcgb2ZmZXIvb3JpZ2luYWxQcmljZSBmcm9tIFByb2R1Y3QgY29sbGVjdGlvbiB3aGVuIHBvc3NpYmxlXHJcbiAgICAgIHRyeSB7XHJcbiAgICAgICAgY29uc3QgUHJvZHVjdCA9IHJlcXVpcmUoJy4uLy4uLy4uL21vZGVscy9Qcm9kdWN0JylcclxuICAgICAgICBpZiAoQXJyYXkuaXNBcnJheShzZXJpYWxpemVkLml0ZW1zKSAmJiBzZXJpYWxpemVkLml0ZW1zLmxlbmd0aCA+IDApIHtcclxuICAgICAgICAgIGZvciAobGV0IGkgPSAwOyBpIDwgc2VyaWFsaXplZC5pdGVtcy5sZW5ndGg7IGkrKykge1xyXG4gICAgICAgICAgICBjb25zdCBpdCA9IHNlcmlhbGl6ZWQuaXRlbXNbaV1cclxuICAgICAgICAgICAgaWYgKGl0ICYmIGl0LnByb2R1Y3RJZCAmJiAoISgnb2ZmZXInIGluIGl0KSB8fCAhKCdvcmlnaW5hbFByaWNlJyBpbiBpdCkpKSB7XHJcbiAgICAgICAgICAgICAgdHJ5IHtcclxuICAgICAgICAgICAgICAgIGNvbnN0IHByb2QgPSBhd2FpdCBQcm9kdWN0LmZpbmRCeUlkKGl0LnByb2R1Y3RJZCkubGVhbigpXHJcbiAgICAgICAgICAgICAgICBpZiAocHJvZCkge1xyXG4gICAgICAgICAgICAgICAgICBjb25zdCBiYXNlID0gQXJyYXkuaXNBcnJheShwcm9kLnByaWNlKSA/IHByb2QucHJpY2VbMF0gOiBwcm9kLnByaWNlXHJcbiAgICAgICAgICAgICAgICAgIHNlcmlhbGl6ZWQuaXRlbXNbaV0ub2ZmZXIgPSAoKCkgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgIGNvbnN0IHYgPSBwcm9kLm9mZmVyXHJcbiAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGVvZiB2ID09PSAnYm9vbGVhbicpIHJldHVybiB2XHJcbiAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGVvZiB2ID09PSAnc3RyaW5nJykgcmV0dXJuIFsndHJ1ZScsJzEnLCd5ZXMnXS5pbmNsdWRlcyh2LnRvTG93ZXJDYXNlKCkudHJpbSgpKVxyXG4gICAgICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgdiA9PT0gJ251bWJlcicpIHJldHVybiB2ID09PSAxXHJcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlXHJcbiAgICAgICAgICAgICAgICAgIH0pKClcclxuICAgICAgICAgICAgICAgICAgc2VyaWFsaXplZC5pdGVtc1tpXS5vcmlnaW5hbFByaWNlID0gdHlwZW9mIGJhc2UgIT09ICd1bmRlZmluZWQnICYmIGJhc2UgIT09IG51bGwgPyBOdW1iZXIoYmFzZSkgfHwgbnVsbCA6IG51bGxcclxuICAgICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgICB9IGNhdGNoIChlKSB7XHJcbiAgICAgICAgICAgICAgICAvKiBpZ25vcmUgcGVyLWl0ZW0gZW5yaWNoIGVycm9ycyAqL1xyXG4gICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgfVxyXG4gICAgICAgIH1cclxuICAgICAgfSBjYXRjaCAoZSkge1xyXG4gICAgICAgIC8qIGlnbm9yZSBlbnJpY2htZW50IGVycm9ycyAqL1xyXG4gICAgICB9XHJcbiAgdHJ5IHsgY29uc29sZS5sb2coJy9hcGkvY2FydCBHRVQgZm9yIHVzZXJJZDonLCB1c2VySWQsICdpdGVtczonLCAoc2VyaWFsaXplZC5pdGVtcyB8fCBbXSkubGVuZ3RoKSB9IGNhdGNoIChlKSB7fVxyXG4gIHJldHVybiByZXMuc3RhdHVzKDIwMCkuanNvbihzZXJpYWxpemVkKVxyXG4gICAgfVxyXG5cclxuICAgIGlmIChtZXRob2QgPT09ICdQT1NUJykge1xyXG4gICAgICBsZXQgeyBpdGVtcywgc3VidG90YWwgfSA9IHJlcS5ib2R5IHx8IHt9XHJcblxyXG4gICAgICAvLyBEZWJ1ZzogbG9nIHRva2VuL3VzZXJJZCBhbmQgaW5jb21pbmcgcGF5bG9hZCBzaXplIHRvIGhlbHAgZGlhZ25vc2UgbWVyZ2Utb24tbG9naW5cclxuICAgICAgdHJ5IHtcclxuICAgICAgICBjb25zdCBpbmNvbWluZ0NvdW50ID0gQXJyYXkuaXNBcnJheShpdGVtcykgPyBpdGVtcy5sZW5ndGggOiBpdGVtcyA/IDEgOiAwXHJcbiAgICAgICAgY29uc29sZS5sb2coJy9hcGkvY2FydCBQT1NUIHRva2VuOicsIHRva2VuLCAndXNlcklkOicsIHVzZXJJZCwgJ2luY29taW5nIGl0ZW1zOicsIGluY29taW5nQ291bnQpXHJcbiAgICAgIH0gY2F0Y2ggKGUpIHtcclxuICAgICAgICAvKiBpZ25vcmUgbG9nZ2luZyBlcnJvcnMgKi9cclxuICAgICAgfVxyXG5cclxuICAgICAgLy8gYWNjZXB0IGEgbm9uLWFycmF5IChzaW5nbGUgaXRlbSkgYnkgY29lcmNpbmcgdG8gYXJyYXk7IGtlZXAgZW1wdHkgYXJyYXkgYWxsb3dlZFxyXG4gICAgICBpZiAoIUFycmF5LmlzQXJyYXkoaXRlbXMpICYmIGl0ZW1zICE9IG51bGwpIHtcclxuICAgICAgICBpdGVtcyA9IFtpdGVtc11cclxuICAgICAgfVxyXG5cclxuICAgICAgaWYgKGl0ZW1zICE9IG51bGwgJiYgIUFycmF5LmlzQXJyYXkoaXRlbXMpKSB7XHJcbiAgICAgICAgcmV0dXJuIHJlcy5zdGF0dXMoNDAwKS5qc29uKHsgbWVzc2FnZTogJ2l0ZW1zIG11c3QgYmUgYW4gYXJyYXkgb3IgbnVsbCcgfSlcclxuICAgICAgfVxyXG5cclxuICAgICAgLy8gaGVscGVyOiBub3JtYWxpemUgZXh0cmFzIChlbnN1cmUgcHJlZGljdGFibGUgb3JkZXIpIGFuZCBpdGVtc1xyXG4gICAgICBjb25zdCBub3JtYWxpemVFeHRyYXMgPSAocmF3RXh0cmFzKSA9PiB7XHJcbiAgICAgICAgY29uc3QgYXJyID0gQXJyYXkuaXNBcnJheShyYXdFeHRyYXMpID8gcmF3RXh0cmFzIDogW11cclxuICAgICAgICBjb25zdCBjbGVhbmVkID0gYXJyLm1hcCgoZSkgPT4gKHsgdGV4dDogKGU/LnRleHQgfHwgZT8ubmFtZSB8fCAnJykudHJpbSgpLCBwcmljZTogTnVtYmVyKGU/LnByaWNlKSB8fCAwIH0pKVxyXG4gICAgICAgIC8vIHNvcnQgdG8gbWFrZSBlcXVhbGl0eSBvcmRlci1pbnNlbnNpdGl2ZVxyXG4gICAgICAgIGNsZWFuZWQuc29ydCgoYSwgYikgPT4gYS50ZXh0LmxvY2FsZUNvbXBhcmUoYi50ZXh0KSB8fCBhLnByaWNlIC0gYi5wcmljZSlcclxuICAgICAgICByZXR1cm4gY2xlYW5lZFxyXG4gICAgICB9XHJcblxyXG4gICAgICBjb25zdCBwYXJzZU9mZmVyID0gKHYpID0+IHtcclxuICAgICAgICBpZiAodHlwZW9mIHYgPT09ICdib29sZWFuJykgcmV0dXJuIHZcclxuICAgICAgICBpZiAodHlwZW9mIHYgPT09ICdzdHJpbmcnKSByZXR1cm4gWyd0cnVlJywgJzEnLCAneWVzJ10uaW5jbHVkZXModi50b0xvd2VyQ2FzZSgpLnRyaW0oKSlcclxuICAgICAgICBpZiAodHlwZW9mIHYgPT09ICdudW1iZXInKSByZXR1cm4gdiA9PT0gMVxyXG4gICAgICAgIHJldHVybiBmYWxzZVxyXG4gICAgICB9XHJcblxyXG4gICAgICBjb25zdCBub3JtYWxpemVkID0gQXJyYXkuaXNBcnJheShpdGVtcylcclxuICAgICAgICA/IGl0ZW1zLm1hcCgoaXQpID0+IHtcclxuICAgICAgICAgICAgY29uc3QgZXh0cmFzID0gbm9ybWFsaXplRXh0cmFzKGl0LmV4dHJhcylcclxuXHJcbiAgICAgICAgICAgIC8vIHByb2R1Y3RJZDogcHJlZmVyIF9pZCBvciBwcm9kdWN0SWQsIG9ubHkga2VlcCBpZiB2YWxpZCBPYmplY3RJZC1saWtlIHN0cmluZ1xyXG4gICAgICAgICAgICBsZXQgcHJvZHVjdElkID0gaXQuX2lkIHx8IGl0LnByb2R1Y3RJZCB8fCBudWxsXHJcbiAgICAgICAgICAgIGlmIChwcm9kdWN0SWQgJiYgdHlwZW9mIHByb2R1Y3RJZCA9PT0gJ3N0cmluZycgJiYgbW9uZ29vc2UuVHlwZXMuT2JqZWN0SWQuaXNWYWxpZChwcm9kdWN0SWQpKSB7XHJcbiAgICAgICAgICAgICAgcHJvZHVjdElkID0gbW9uZ29vc2UuVHlwZXMuT2JqZWN0SWQocHJvZHVjdElkKVxyXG4gICAgICAgICAgICB9IGVsc2Uge1xyXG4gICAgICAgICAgICAgIHByb2R1Y3RJZCA9IG51bGxcclxuICAgICAgICAgICAgfVxyXG5cclxuICAgICAgICAgICAgcmV0dXJuIHtcclxuICAgICAgICAgICAgICBwcm9kdWN0SWQsXHJcbiAgICAgICAgICAgICAgdGl0bGU6IChpdC50aXRsZSB8fCBpdC5uYW1lIHx8ICcnKS50cmltKCksXHJcbiAgICAgICAgICAgICAgaW1nOiBpdC5pbWcgfHwgaXQuaW1hZ2UgfHwgJycsXHJcbiAgICAgICAgICAgICAgcHJpY2U6IE51bWJlcihpdC5wcmljZSkgfHwgMCxcclxuICAgICAgICAgICAgICBxdWFudGl0eTogTnVtYmVyKGl0LnF1YW50aXR5KSB8fCAxLFxyXG4gICAgICAgICAgICAgIGV4dHJhcyxcclxuICAgICAgICAgICAgICAvLyBwcmVzZXJ2ZSB3aGV0aGVyIGNsaWVudCBmbGFnZ2VkIHRoaXMgYXMgYW4gb2ZmZXIgYW5kIG9yaWdpbmFsIHByaWNlIGlmIHByb3ZpZGVkXHJcbiAgICAgICAgICAgICAgb2ZmZXI6IHBhcnNlT2ZmZXIoaXQub2ZmZXIpLFxyXG4gICAgICAgICAgICAgIG9yaWdpbmFsUHJpY2U6IHR5cGVvZiBpdC5vcmlnaW5hbFByaWNlICE9PSAndW5kZWZpbmVkJyA/IE51bWJlcihpdC5vcmlnaW5hbFByaWNlKSB8fCBudWxsIDogbnVsbCxcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgfSlcclxuICAgICAgICA6IFtdXHJcblxyXG4gICAgICAvLyBJZiBzdWJ0b3RhbCBub3QgcHJvdmlkZWQsIGNvbXB1dGUgaXQgZnJvbSBub3JtYWxpemVkIGl0ZW1zXHJcbiAgICAgIHN1YnRvdGFsID0gTnVtYmVyKHN1YnRvdGFsKSB8fCBub3JtYWxpemVkLnJlZHVjZSgocywgcCkgPT4gcyArIChOdW1iZXIocC5wcmljZSkgfHwgMCkgKiAoTnVtYmVyKHAucXVhbnRpdHkpIHx8IDEpLCAwKVxyXG5cclxuICAgICAgLy8gRmluZCBvciBjcmVhdGUgY2FydFxyXG4gICAgICBsZXQgY2FydFxyXG4gICAgICB0cnkge1xyXG4gICAgICAgIGNvbnN0IHsgY2FydElkIH0gPSByZXEuYm9keSB8fCB7fVxyXG4gICAgICAgIGlmIChjYXJ0SWQgJiYgbW9uZ29vc2UuVHlwZXMuT2JqZWN0SWQuaXNWYWxpZChjYXJ0SWQpKSB7XHJcbiAgICAgICAgICAvLyB1cGRhdGUgZXhpc3RpbmcgYW5vbnltb3VzIGNhcnQgYnkgaWRcclxuICAgICAgICAgIGNhcnQgPSBhd2FpdCBDYXJ0LmZpbmRCeUlkKGNhcnRJZClcclxuICAgICAgICAgIGlmICghY2FydCkge1xyXG4gICAgICAgICAgICBjYXJ0ID0gbmV3IENhcnQoeyBpdGVtczogbm9ybWFsaXplZCwgc3VidG90YWwgfSlcclxuICAgICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAgIGNhcnQuaXRlbXMgPSBub3JtYWxpemVkXHJcbiAgICAgICAgICAgIGNhcnQuc3VidG90YWwgPSBzdWJ0b3RhbFxyXG4gICAgICAgICAgICBjYXJ0LnVwZGF0ZWRBdCA9IG5ldyBEYXRlKClcclxuICAgICAgICAgIH1cclxuICAgICAgICB9IGVsc2UgaWYgKHVzZXJJZCkge1xyXG4gICAgICAgICAgY2FydCA9IGF3YWl0IENhcnQuZmluZE9uZSh7IHVzZXI6IHVzZXJJZCB9KVxyXG4gICAgICAgICAgaWYgKCFjYXJ0KSB7XHJcbiAgICAgICAgICAgIC8vIG5vIGV4aXN0aW5nIHVzZXIgY2FydDogY3JlYXRlIG9uZSBmcm9tIG5vcm1hbGl6ZWQgaXRlbXNcclxuICAgICAgICAgICAgY2FydCA9IG5ldyBDYXJ0KHsgdXNlcjogdXNlcklkLCBpdGVtczogbm9ybWFsaXplZCwgc3VidG90YWwgfSlcclxuICAgICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAgIC8vIG1lcmdlIHNlbWFudGljczogaW5zdGVhZCBvZiBvdmVyd3JpdGluZywgbWVyZ2UgaW5jb21pbmcgbm9ybWFsaXplZCBpdGVtcyBpbnRvIGV4aXN0aW5nIGNhcnRcclxuICAgICAgICAgICAgaWYgKEFycmF5LmlzQXJyYXkobm9ybWFsaXplZCkgJiYgbm9ybWFsaXplZC5sZW5ndGggPiAwKSB7XHJcbiAgICAgICAgICAgICAgLy8gYnVpbGQgYSBtYXAgb2YgZXhpc3RpbmcgaXRlbXMgYnkgYSBzdGFibGUga2V5XHJcbiAgICAgICAgICAgICAgY29uc3QgaXRlbUtleSA9IChpdCkgPT4ge1xyXG4gICAgICAgICAgICAgICAgY29uc3QgcGlkID0gaXQucHJvZHVjdElkID8gU3RyaW5nKGl0LnByb2R1Y3RJZCkgOiBudWxsXHJcbiAgICAgICAgICAgICAgICBjb25zdCBleHRyYXNLZXkgPSBBcnJheS5pc0FycmF5KGl0LmV4dHJhcykgPyBKU09OLnN0cmluZ2lmeShpdC5leHRyYXMpIDogJ1tdJ1xyXG4gICAgICAgICAgICAgICAgaWYgKHBpZCkgcmV0dXJuIGBwaWQ6JHtwaWR9YFxyXG4gICAgICAgICAgICAgICAgcmV0dXJuIGBhbm9uOiR7KGl0LnRpdGxlIHx8ICcnKX18JHtOdW1iZXIoaXQucHJpY2UpIHx8IDB9fCR7ZXh0cmFzS2V5fWBcclxuICAgICAgICAgICAgICB9XHJcblxyXG4gICAgICAgICAgICAgIGNvbnN0IGV4aXN0aW5nID0gQXJyYXkuaXNBcnJheShjYXJ0Lml0ZW1zKSA/IGNhcnQuaXRlbXMuc2xpY2UoKSA6IFtdXHJcbiAgICAgICAgICAgICAgY29uc3QgbWFwID0gbmV3IE1hcCgpXHJcbiAgICAgICAgICAgICAgZXhpc3RpbmcuZm9yRWFjaCgoZXgpID0+IHtcclxuICAgICAgICAgICAgICAgIGNvbnN0IGtleSA9IGl0ZW1LZXkoZXgpXHJcbiAgICAgICAgICAgICAgICBtYXAuc2V0KGtleSwgeyAuLi5leCB9KVxyXG4gICAgICAgICAgICAgIH0pXHJcblxyXG4gICAgICAgICAgICAgICAgICBub3JtYWxpemVkLmZvckVhY2goKGluYykgPT4ge1xyXG4gICAgICAgICAgICAgICAgY29uc3Qga2V5ID0gaXRlbUtleShpbmMpXHJcbiAgICAgICAgICAgICAgICBjb25zdCBmb3VuZCA9IG1hcC5nZXQoa2V5KVxyXG4gICAgICAgICAgICAgICAgaWYgKGZvdW5kKSB7XHJcbiAgICAgICAgICAgICAgICAgIC8vIHN1bSBxdWFudGl0aWVzIGFuZCBwcmVmZXIgaW5jb21pbmcgcHJpY2UvdGl0bGUvaW1nXHJcbiAgICAgICAgICAgICAgICAgIGZvdW5kLnF1YW50aXR5ID0gKE51bWJlcihmb3VuZC5xdWFudGl0eSkgfHwgMCkgKyAoTnVtYmVyKGluYy5xdWFudGl0eSkgfHwgMClcclxuICAgICAgICAgICAgICAgICAgZm91bmQucHJpY2UgPSBOdW1iZXIoaW5jLnByaWNlKSB8fCBOdW1iZXIoZm91bmQucHJpY2UpIHx8IDBcclxuICAgICAgICAgICAgICAgICAgLy8gcHJlc2VydmUgb2ZmZXIvb3JpZ2luYWxQcmljZSB3aGVyZSBpbmNvbWluZyBwcm92aWRlcyBpdFxyXG4gICAgICAgICAgICAgICAgICBmb3VuZC5vZmZlciA9ICh0eXBlb2YgaW5jLm9mZmVyICE9PSAndW5kZWZpbmVkJykgPyAhIWluYy5vZmZlciA6ICEhZm91bmQub2ZmZXJcclxuICAgICAgICAgICAgICAgICAgZm91bmQub3JpZ2luYWxQcmljZSA9IHR5cGVvZiBpbmMub3JpZ2luYWxQcmljZSAhPT0gJ3VuZGVmaW5lZCcgPyBpbmMub3JpZ2luYWxQcmljZSB8fCBmb3VuZC5vcmlnaW5hbFByaWNlIDogZm91bmQub3JpZ2luYWxQcmljZVxyXG4gICAgICAgICAgICAgICAgICBmb3VuZC50aXRsZSA9IGluYy50aXRsZSB8fCBmb3VuZC50aXRsZVxyXG4gICAgICAgICAgICAgICAgICBmb3VuZC5pbWcgPSBpbmMuaW1nIHx8IGZvdW5kLmltZ1xyXG4gICAgICAgICAgICAgICAgICBmb3VuZC5leHRyYXMgPSBpbmMuZXh0cmFzIHx8IGZvdW5kLmV4dHJhc1xyXG4gICAgICAgICAgICAgICAgICBtYXAuc2V0KGtleSwgZm91bmQpXHJcbiAgICAgICAgICAgICAgICB9IGVsc2Uge1xyXG4gICAgICAgICAgICAgICAgICBtYXAuc2V0KGtleSwgeyAuLi5pbmMgfSlcclxuICAgICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgICB9KVxyXG5cclxuICAgICAgICAgICAgICAvLyByZXBsYWNlIGNhcnQuaXRlbXMgd2l0aCBtZXJnZWQgYXJyYXlcclxuICAgICAgICAgICAgICBjYXJ0Lml0ZW1zID0gQXJyYXkuZnJvbShtYXAudmFsdWVzKCkpXHJcbiAgICAgICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAgICAgLy8gaWYgaW5jb21pbmcgaXRlbXMgZW1wdHkgYXJyYXksIGludGVycHJldCBhcyBjbGVhcmluZyB0aGUgY2FydFxyXG4gICAgICAgICAgICAgIGNhcnQuaXRlbXMgPSBbXVxyXG4gICAgICAgICAgICB9XHJcblxyXG4gICAgICAgICAgICAvLyByZWNvbXB1dGUgc3VidG90YWwgZnJvbSByZXN1bHRpbmcgaXRlbXNcclxuICAgICAgICAgICAgY2FydC5zdWJ0b3RhbCA9IEFycmF5LmlzQXJyYXkoY2FydC5pdGVtcylcclxuICAgICAgICAgICAgICA/IGNhcnQuaXRlbXMucmVkdWNlKChzLCBwKSA9PiBzICsgKE51bWJlcihwLnByaWNlKSB8fCAwKSAqIChOdW1iZXIocC5xdWFudGl0eSkgfHwgMSksIDApXHJcbiAgICAgICAgICAgICAgOiAwXHJcbiAgICAgICAgICAgIGNhcnQudXBkYXRlZEF0ID0gbmV3IERhdGUoKVxyXG4gICAgICAgICAgfVxyXG4gICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAvLyBhbm9ueW1vdXMgY2FydDogY3JlYXRlIG9uZS1vZmYgY2FydCByZWNvcmQgKG5vIHVzZXIpXHJcbiAgICAgICAgICBjYXJ0ID0gbmV3IENhcnQoeyBpdGVtczogbm9ybWFsaXplZCwgc3VidG90YWwgfSlcclxuICAgICAgICB9XHJcblxyXG4gICAgICAgIGNvbnN0IHNhdmVkID0gYXdhaXQgY2FydC5zYXZlKClcclxuICAgICAgICBjb25zdCBvdXQgPSB7XHJcbiAgICAgICAgICAuLi5zYXZlZC50b09iamVjdCgpLFxyXG4gICAgICAgICAgX2lkOiBTdHJpbmcoc2F2ZWQuX2lkKSxcclxuICAgICAgICAgIHVzZXI6IHNhdmVkLnVzZXIgPyBTdHJpbmcoc2F2ZWQudXNlcikgOiBudWxsLFxyXG4gICAgICAgICAgY3JlYXRlZEF0OiBzYXZlZC5jcmVhdGVkQXQgPyBzYXZlZC5jcmVhdGVkQXQudG9JU09TdHJpbmcoKSA6IG51bGwsXHJcbiAgICAgICAgICB1cGRhdGVkQXQ6IHNhdmVkLnVwZGF0ZWRBdCA/IHNhdmVkLnVwZGF0ZWRBdC50b0lTT1N0cmluZygpIDogbnVsbCxcclxuICAgICAgICB9XHJcbiAgICAgICAgcmV0dXJuIHJlcy5zdGF0dXMoMjAxKS5qc29uKG91dClcclxuICAgICAgfSBjYXRjaCAoc2F2ZUVycikge1xyXG4gICAgICAgIGNvbnNvbGUuZXJyb3IoJy9hcGkvY2FydCBzYXZlIGVycm9yOicsIHNhdmVFcnIpXHJcbiAgICAgICAgLy8gUmV0dXJuIHZhbGlkYXRpb24gZGV0YWlscyBpZiBhdmFpbGFibGVcclxuICAgICAgICBpZiAoc2F2ZUVyciAmJiBzYXZlRXJyLmVycm9ycykge1xyXG4gICAgICAgICAgY29uc3QgZGV0YWlscyA9IE9iamVjdC5rZXlzKHNhdmVFcnIuZXJyb3JzKS5yZWR1Y2UoKGFjYywgaykgPT4ge1xyXG4gICAgICAgICAgICBhY2Nba10gPSBzYXZlRXJyLmVycm9yc1trXS5tZXNzYWdlXHJcbiAgICAgICAgICAgIHJldHVybiBhY2NcclxuICAgICAgICAgIH0sIHt9KVxyXG4gICAgICAgICAgcmV0dXJuIHJlcy5zdGF0dXMoNDAwKS5qc29uKHsgbWVzc2FnZTogJ1ZhbGlkYXRpb24gZmFpbGVkJywgZGV0YWlscyB9KVxyXG4gICAgICAgIH1cclxuICAgICAgICByZXR1cm4gcmVzLnN0YXR1cyg1MDApLmpzb24oeyBtZXNzYWdlOiBzYXZlRXJyLm1lc3NhZ2UgfHwgU3RyaW5nKHNhdmVFcnIpIH0pXHJcbiAgICAgIH1cclxuICAgIH1cclxuXHJcbiAgICByZXMuc2V0SGVhZGVyKCdBbGxvdycsIFsnR0VUJywgJ1BPU1QnXSlcclxuICAgIHJldHVybiByZXMuc3RhdHVzKDQwNSkuZW5kKGBNZXRob2QgJHttZXRob2R9IE5vdCBBbGxvd2VkYClcclxuICB9IGNhdGNoIChlcnIpIHtcclxuICAgIGNvbnNvbGUuZXJyb3IoJy9hcGkvY2FydCBlcnJvcjonLCBlcnIpXHJcbiAgICByZXR1cm4gcmVzLnN0YXR1cyg1MDApLmpzb24oeyBtZXNzYWdlOiBlcnIubWVzc2FnZSB8fCBTdHJpbmcoZXJyKSB9KVxyXG4gIH1cclxufVxyXG4iXSwibmFtZXMiOlsiZGJDb25uZWN0IiwiQ2FydCIsIm1vbmdvb3NlIiwiaGFuZGxlciIsInJlcSIsInJlcyIsIm1ldGhvZCIsInRva2VuIiwiY29va2llcyIsInVzZXJJZCIsInByb2Nlc3MiLCJlbnYiLCJUT0tFTiIsImNhcnRJZCIsInF1ZXJ5IiwiVHlwZXMiLCJPYmplY3RJZCIsImlzVmFsaWQiLCJzdGF0dXMiLCJqc29uIiwibWVzc2FnZSIsImNhcnQiLCJmaW5kQnlJZCIsImxlYW4iLCJpdGVtcyIsInN1YnRvdGFsIiwic2VyaWFsaXplZCIsIl9pZCIsIlN0cmluZyIsInVzZXIiLCJjcmVhdGVkQXQiLCJ0b0lTT1N0cmluZyIsInVwZGF0ZWRBdCIsIlByb2R1Y3QiLCJyZXF1aXJlIiwiQXJyYXkiLCJpc0FycmF5IiwibGVuZ3RoIiwiaSIsIml0IiwicHJvZHVjdElkIiwicHJvZCIsImJhc2UiLCJwcmljZSIsIm9mZmVyIiwidiIsImluY2x1ZGVzIiwidG9Mb3dlckNhc2UiLCJ0cmltIiwib3JpZ2luYWxQcmljZSIsIk51bWJlciIsImUiLCJjb25zb2xlIiwibG9nIiwiZmluZE9uZSIsImJvZHkiLCJpbmNvbWluZ0NvdW50Iiwibm9ybWFsaXplRXh0cmFzIiwicmF3RXh0cmFzIiwiYXJyIiwiY2xlYW5lZCIsIm1hcCIsInRleHQiLCJuYW1lIiwic29ydCIsImEiLCJiIiwibG9jYWxlQ29tcGFyZSIsInBhcnNlT2ZmZXIiLCJub3JtYWxpemVkIiwiZXh0cmFzIiwidGl0bGUiLCJpbWciLCJpbWFnZSIsInF1YW50aXR5IiwicmVkdWNlIiwicyIsInAiLCJEYXRlIiwiaXRlbUtleSIsInBpZCIsImV4dHJhc0tleSIsIkpTT04iLCJzdHJpbmdpZnkiLCJleGlzdGluZyIsInNsaWNlIiwiTWFwIiwiZm9yRWFjaCIsImV4Iiwia2V5Iiwic2V0IiwiaW5jIiwiZm91bmQiLCJnZXQiLCJmcm9tIiwidmFsdWVzIiwic2F2ZWQiLCJzYXZlIiwib3V0IiwidG9PYmplY3QiLCJzYXZlRXJyIiwiZXJyb3IiLCJlcnJvcnMiLCJkZXRhaWxzIiwiT2JqZWN0Iiwia2V5cyIsImFjYyIsImsiLCJzZXRIZWFkZXIiLCJlbmQiLCJlcnIiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(api)/./pages/api/cart/index.js\n");
 
-;// CONCATENATED MODULE: ./pages/api/cart/index.js
+/***/ }),
 
+/***/ "(api)/./util/mongo.js":
+/*!***********************!*\
+  !*** ./util/mongo.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-
-// Dev/Prod: simple cart persistence APIs
-async function handler(req, res) {
-    const { method  } = req;
-    const token = req.cookies?.token;
-    try {
-        await (0,mongo/* default */.Z)();
-        // resolve user id from token (dev: token === userId, admin token is env TOKEN)
-        let userId = null;
-        if (token && token !== process.env.TOKEN) userId = token;
-        if (method === "GET") {
-            // allow fetching by cartId (anonymous carts) or by logged-in user
-            const { cartId  } = req.query || {};
-            if (cartId) {
-                if (!external_mongoose_default().Types.ObjectId.isValid(cartId)) return res.status(400).json({
-                    message: "invalid cartId"
-                });
-                const cart = await Cart.findById(cartId).lean();
-                if (!cart) return res.status(200).json({
-                    items: [],
-                    subtotal: 0
-                });
-                const serialized = {
-                    ...cart,
-                    _id: String(cart._id),
-                    user: cart.user ? String(cart.user) : null,
-                    createdAt: cart.createdAt ? cart.createdAt.toISOString() : null,
-                    updatedAt: cart.updatedAt ? cart.updatedAt.toISOString() : null
-                };
-                // If stored items lack offer/originalPrice, try to enrich them from Product collection
-                try {
-                    const Product = __webpack_require__(9442);
-                    if (Array.isArray(serialized.items) && serialized.items.length > 0) {
-                        for(let i = 0; i < serialized.items.length; i++){
-                            const it = serialized.items[i];
-                            if (it && it.productId && (!("offer" in it) || !("originalPrice" in it))) {
-                                try {
-                                    const prod = await Product.findById(it.productId).lean();
-                                    if (prod) {
-                                        // derive original price from product price field
-                                        const base = Array.isArray(prod.price) ? prod.price[0] : prod.price;
-                                        serialized.items[i].offer = (()=>{
-                                            const v = prod.offer;
-                                            if (typeof v === "boolean") return v;
-                                            if (typeof v === "string") return [
-                                                "true",
-                                                "1",
-                                                "yes"
-                                            ].includes(v.toLowerCase().trim());
-                                            if (typeof v === "number") return v === 1;
-                                            return false;
-                                        })();
-                                        serialized.items[i].originalPrice = typeof base !== "undefined" && base !== null ? Number(base) || null : null;
-                                    }
-                                } catch (e) {
-                                /* ignore per-item enrich errors */ }
-                            }
-                        }
-                    }
-                } catch (e1) {
-                /* ignore enrichment errors */ }
-                try {
-                    console.log("/api/cart GET by cartId:", cartId, "items:", (serialized.items || []).length);
-                } catch (e2) {}
-                return res.status(200).json(serialized);
-            }
-            if (!userId) return res.status(200).json({
-                items: [],
-                subtotal: 0
-            });
-            const cart1 = await Cart.findOne({
-                user: userId
-            }).lean();
-            if (!cart1) {
-                try {
-                    console.log("/api/cart GET for userId:", userId, "no cart found");
-                } catch (e3) {}
-                return res.status(200).json({
-                    items: [],
-                    subtotal: 0
-                });
-            }
-            // serialize
-            const serialized1 = {
-                ...cart1,
-                _id: String(cart1._id),
-                user: cart1.user ? String(cart1.user) : null,
-                createdAt: cart1.createdAt ? cart1.createdAt.toISOString() : null,
-                updatedAt: cart1.updatedAt ? cart1.updatedAt.toISOString() : null
-            };
-            // Enrich items missing offer/originalPrice from Product collection when possible
-            try {
-                const Product1 = __webpack_require__(9442);
-                if (Array.isArray(serialized1.items) && serialized1.items.length > 0) {
-                    for(let i1 = 0; i1 < serialized1.items.length; i1++){
-                        const it1 = serialized1.items[i1];
-                        if (it1 && it1.productId && (!("offer" in it1) || !("originalPrice" in it1))) {
-                            try {
-                                const prod1 = await Product1.findById(it1.productId).lean();
-                                if (prod1) {
-                                    const base1 = Array.isArray(prod1.price) ? prod1.price[0] : prod1.price;
-                                    serialized1.items[i1].offer = (()=>{
-                                        const v = prod1.offer;
-                                        if (typeof v === "boolean") return v;
-                                        if (typeof v === "string") return [
-                                            "true",
-                                            "1",
-                                            "yes"
-                                        ].includes(v.toLowerCase().trim());
-                                        if (typeof v === "number") return v === 1;
-                                        return false;
-                                    })();
-                                    serialized1.items[i1].originalPrice = typeof base1 !== "undefined" && base1 !== null ? Number(base1) || null : null;
-                                }
-                            } catch (e4) {
-                            /* ignore per-item enrich errors */ }
-                        }
-                    }
-                }
-            } catch (e5) {
-            /* ignore enrichment errors */ }
-            try {
-                console.log("/api/cart GET for userId:", userId, "items:", (serialized1.items || []).length);
-            } catch (e6) {}
-            return res.status(200).json(serialized1);
-        }
-        if (method === "POST") {
-            let { items , subtotal  } = req.body || {};
-            // Debug: log token/userId and incoming payload size to help diagnose merge-on-login
-            try {
-                const incomingCount = Array.isArray(items) ? items.length : items ? 1 : 0;
-                console.log("/api/cart POST token:", token, "userId:", userId, "incoming items:", incomingCount);
-            } catch (e7) {
-            /* ignore logging errors */ }
-            // accept a non-array (single item) by coercing to array; keep empty array allowed
-            if (!Array.isArray(items) && items != null) {
-                items = [
-                    items
-                ];
-            }
-            if (items != null && !Array.isArray(items)) {
-                return res.status(400).json({
-                    message: "items must be an array or null"
-                });
-            }
-            // helper: normalize extras (ensure predictable order) and items
-            const normalizeExtras = (rawExtras)=>{
-                const arr = Array.isArray(rawExtras) ? rawExtras : [];
-                const cleaned = arr.map((e)=>({
-                        text: (e?.text || e?.name || "").trim(),
-                        price: Number(e?.price) || 0
-                    }));
-                // sort to make equality order-insensitive
-                cleaned.sort((a, b)=>a.text.localeCompare(b.text) || a.price - b.price);
-                return cleaned;
-            };
-            const parseOffer = (v)=>{
-                if (typeof v === "boolean") return v;
-                if (typeof v === "string") return [
-                    "true",
-                    "1",
-                    "yes"
-                ].includes(v.toLowerCase().trim());
-                if (typeof v === "number") return v === 1;
-                return false;
-            };
-            const normalized = Array.isArray(items) ? items.map((it)=>{
-                const extras = normalizeExtras(it.extras);
-                // productId: prefer _id or productId, only keep if valid ObjectId-like string
-                let productId = it._id || it.productId || null;
-                if (productId && typeof productId === "string" && external_mongoose_default().Types.ObjectId.isValid(productId)) {
-                    productId = external_mongoose_default().Types.ObjectId(productId);
-                } else {
-                    productId = null;
-                }
-                return {
-                    productId,
-                    title: (it.title || it.name || "").trim(),
-                    img: it.img || it.image || "",
-                    price: Number(it.price) || 0,
-                    quantity: Number(it.quantity) || 1,
-                    extras,
-                    // preserve whether client flagged this as an offer and original price if provided
-                    offer: parseOffer(it.offer),
-                    originalPrice: typeof it.originalPrice !== "undefined" ? Number(it.originalPrice) || null : null
-                };
-            }) : [];
-            // If subtotal not provided, compute it from normalized items
-            subtotal = Number(subtotal) || normalized.reduce((s, p)=>s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0);
-            // Find or create cart
-            let cart2;
-            try {
-                const { cartId: cartId1  } = req.body || {};
-                if (cartId1 && external_mongoose_default().Types.ObjectId.isValid(cartId1)) {
-                    // update existing anonymous cart by id
-                    cart2 = await Cart.findById(cartId1);
-                    if (!cart2) {
-                        cart2 = new Cart({
-                            items: normalized,
-                            subtotal
-                        });
-                    } else {
-                        cart2.items = normalized;
-                        cart2.subtotal = subtotal;
-                        cart2.updatedAt = new Date();
-                    }
-                } else if (userId) {
-                    cart2 = await Cart.findOne({
-                        user: userId
-                    });
-                    if (!cart2) {
-                        // no existing user cart: create one from normalized items
-                        cart2 = new Cart({
-                            user: userId,
-                            items: normalized,
-                            subtotal
-                        });
-                    } else {
-                        // merge semantics: instead of overwriting, merge incoming normalized items into existing cart
-                        if (Array.isArray(normalized) && normalized.length > 0) {
-                            // build a map of existing items by a stable key
-                            const itemKey = (it)=>{
-                                const pid = it.productId ? String(it.productId) : null;
-                                const extrasKey = Array.isArray(it.extras) ? JSON.stringify(it.extras) : "[]";
-                                if (pid) return `pid:${pid}`;
-                                return `anon:${it.title || ""}|${Number(it.price) || 0}|${extrasKey}`;
-                            };
-                            const existing = Array.isArray(cart2.items) ? cart2.items.slice() : [];
-                            const map = new Map();
-                            existing.forEach((ex)=>{
-                                const key = itemKey(ex);
-                                map.set(key, {
-                                    ...ex
-                                });
-                            });
-                            normalized.forEach((inc)=>{
-                                const key = itemKey(inc);
-                                const found = map.get(key);
-                                if (found) {
-                                    // sum quantities and prefer incoming price/title/img
-                                    found.quantity = (Number(found.quantity) || 0) + (Number(inc.quantity) || 0);
-                                    found.price = Number(inc.price) || Number(found.price) || 0;
-                                    // preserve offer/originalPrice where incoming provides it
-                                    found.offer = typeof inc.offer !== "undefined" ? !!inc.offer : !!found.offer;
-                                    found.originalPrice = typeof inc.originalPrice !== "undefined" ? inc.originalPrice || found.originalPrice : found.originalPrice;
-                                    found.title = inc.title || found.title;
-                                    found.img = inc.img || found.img;
-                                    found.extras = inc.extras || found.extras;
-                                    map.set(key, found);
-                                } else {
-                                    map.set(key, {
-                                        ...inc
-                                    });
-                                }
-                            });
-                            // replace cart.items with merged array
-                            cart2.items = Array.from(map.values());
-                        } else {
-                            // if incoming items empty array, interpret as clearing the cart
-                            cart2.items = [];
-                        }
-                        // recompute subtotal from resulting items
-                        cart2.subtotal = Array.isArray(cart2.items) ? cart2.items.reduce((s, p)=>s + (Number(p.price) || 0) * (Number(p.quantity) || 1), 0) : 0;
-                        cart2.updatedAt = new Date();
-                    }
-                } else {
-                    // anonymous cart: create one-off cart record (no user)
-                    cart2 = new Cart({
-                        items: normalized,
-                        subtotal
-                    });
-                }
-                const saved = await cart2.save();
-                const out = {
-                    ...saved.toObject(),
-                    _id: String(saved._id),
-                    user: saved.user ? String(saved.user) : null,
-                    createdAt: saved.createdAt ? saved.createdAt.toISOString() : null,
-                    updatedAt: saved.updatedAt ? saved.updatedAt.toISOString() : null
-                };
-                return res.status(201).json(out);
-            } catch (saveErr) {
-                console.error("/api/cart save error:", saveErr);
-                // Return validation details if available
-                if (saveErr && saveErr.errors) {
-                    const details = Object.keys(saveErr.errors).reduce((acc, k)=>{
-                        acc[k] = saveErr.errors[k].message;
-                        return acc;
-                    }, {});
-                    return res.status(400).json({
-                        message: "Validation failed",
-                        details
-                    });
-                }
-                return res.status(500).json({
-                    message: saveErr.message || String(saveErr)
-                });
-            }
-        }
-        res.setHeader("Allow", [
-            "GET",
-            "POST"
-        ]);
-        return res.status(405).end(`Method ${method} Not Allowed`);
-    } catch (err) {
-        console.error("/api/cart error:", err);
-        return res.status(500).json({
-            message: err.message || String(err)
-        });
-    }
-}
-
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mongoose */ \"mongoose\");\n/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);\n\nconst MONGO_URL = process.env.MONGO_URL;\n// DON'T throw at module import time. Some environments (like previews or\n// when running parts of the app without a DB) should be able to import this\n// file. Throwing inside dbConnect keeps errors local to runtime DB usage.\n/**\r\n * Global is used here to maintain a cached connection across hot reloads\r\n * in development. This prevents connections growing exponentially\r\n * during API Route usage.\r\n */ let cached = global.mongoose;\nif (!cached) {\n    cached = global.mongoose = {\n        conn: null,\n        promise: null\n    };\n}\nasync function dbConnect() {\n    if (!MONGO_URL) {\n        throw new Error(\"Please define the MONGO_URL environment variable inside .env.local\");\n    }\n    if (cached.conn) {\n        return cached.conn;\n    }\n    if (!cached.promise) {\n        const opts = {\n            bufferCommands: false\n        };\n        cached.promise = mongoose__WEBPACK_IMPORTED_MODULE_0___default().connect(MONGO_URL, opts).then((mongoose)=>{\n            return mongoose;\n        });\n    }\n    try {\n        cached.conn = await cached.promise;\n    } catch (e) {\n        cached.promise = null;\n        throw e;\n    }\n    return cached.conn;\n}\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (dbConnect);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi91dGlsL21vbmdvLmpzLmpzIiwibWFwcGluZ3MiOiI7Ozs7OztBQUErQjtBQUUvQixNQUFNQyxZQUFZQyxRQUFRQyxHQUFHLENBQUNGLFNBQVM7QUFFdkMseUVBQXlFO0FBQ3pFLDRFQUE0RTtBQUM1RSwwRUFBMEU7QUFFMUU7QUFPQSxJQUFJLENBQUNHLFFBQVE7SUFDWEEsU0FBU0MsT0FBT0wsUUFBUSxHQUFHO1FBQUVNLE1BQU0sSUFBSTtRQUFFQyxTQUFTLElBQUk7SUFBQztBQUN6RCxDQUFDO0FBRUQsZUFBZUM7SUFDYixJQUFJLENBQUNQLFdBQVc7OztJQUtoQixJQUFJRyxPQUFPRSxJQUFJLEVBQUU7UUFDZixPQUFPRjtJQUNULENBQUM7SUFFRDtRQUNFLE1BQU1NLE9BQU87WUFDWEM7O1FBR0ZQLE9BQU9HLE9BQU8sR0FBR1A7WUFDZixPQUFPQTtRQUNUO0lBQ0YsQ0FBQztJQUVELElBQUk7UUFDRkksT0FBT0UsSUFBSSxHQUFHLE1BQU1GO0lBQ3RCLEVBQUU7O1FBRUE7SUFDRjtJQUVBLE9BQU9BO0FBQ1Q7QUFFQSxlQUFlSSIsInNvdXJjZXMiOlsid2VicGFjazovL251dGlsbGEtZmFzdC8uL3V0aWwvbW9uZ28uanM/YzBhNyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgbW9uZ29vc2UgZnJvbSAnbW9uZ29vc2UnXHJcblxyXG5jb25zdCBNT05HT19VUkwgPSBwcm9jZXNzLmVudi5NT05HT19VUkxcclxuXHJcbi8vIERPTidUIHRocm93IGF0IG1vZHVsZSBpbXBvcnQgdGltZS4gU29tZSBlbnZpcm9ubWVudHMgKGxpa2UgcHJldmlld3Mgb3JcclxuLy8gd2hlbiBydW5uaW5nIHBhcnRzIG9mIHRoZSBhcHAgd2l0aG91dCBhIERCKSBzaG91bGQgYmUgYWJsZSB0byBpbXBvcnQgdGhpc1xyXG4vLyBmaWxlLiBUaHJvd2luZyBpbnNpZGUgZGJDb25uZWN0IGtlZXBzIGVycm9ycyBsb2NhbCB0byBydW50aW1lIERCIHVzYWdlLlxyXG5cclxuLyoqXHJcbiAqIEdsb2JhbCBpcyB1c2VkIGhlcmUgdG8gbWFpbnRhaW4gYSBjYWNoZWQgY29ubmVjdGlvbiBhY3Jvc3MgaG90IHJlbG9hZHNcclxuICogaW4gZGV2ZWxvcG1lbnQuIFRoaXMgcHJldmVudHMgY29ubmVjdGlvbnMgZ3Jvd2luZyBleHBvbmVudGlhbGx5XHJcbiAqIGR1cmluZyBBUEkgUm91dGUgdXNhZ2UuXHJcbiAqL1xyXG5sZXQgY2FjaGVkID0gZ2xvYmFsLm1vbmdvb3NlXHJcblxyXG5pZiAoIWNhY2hlZCkge1xyXG4gIGNhY2hlZCA9IGdsb2JhbC5tb25nb29zZSA9IHsgY29ubjogbnVsbCwgcHJvbWlzZTogbnVsbCB9XHJcbn1cclxuXHJcbmFzeW5jIGZ1bmN0aW9uIGRiQ29ubmVjdCgpIHtcclxuICBpZiAoIU1PTkdPX1VSTCkge1xyXG4gICAgdGhyb3cgbmV3IEVycm9yKFxyXG4gICAgICAnUGxlYXNlIGRlZmluZSB0aGUgTU9OR09fVVJMIGVudmlyb25tZW50IHZhcmlhYmxlIGluc2lkZSAuZW52LmxvY2FsJ1xyXG4gICAgKVxyXG4gIH1cclxuICBpZiAoY2FjaGVkLmNvbm4pIHtcclxuICAgIHJldHVybiBjYWNoZWQuY29ublxyXG4gIH1cclxuXHJcbiAgaWYgKCFjYWNoZWQucHJvbWlzZSkge1xyXG4gICAgY29uc3Qgb3B0cyA9IHtcclxuICAgICAgYnVmZmVyQ29tbWFuZHM6IGZhbHNlLFxyXG4gICAgfVxyXG5cclxuICAgIGNhY2hlZC5wcm9taXNlID0gbW9uZ29vc2UuY29ubmVjdChNT05HT19VUkwsIG9wdHMpLnRoZW4oKG1vbmdvb3NlKSA9PiB7XHJcbiAgICAgIHJldHVybiBtb25nb29zZVxyXG4gICAgfSlcclxuICB9XHJcblxyXG4gIHRyeSB7XHJcbiAgICBjYWNoZWQuY29ubiA9IGF3YWl0IGNhY2hlZC5wcm9taXNlXHJcbiAgfSBjYXRjaCAoZSkge1xyXG4gICAgY2FjaGVkLnByb21pc2UgPSBudWxsXHJcbiAgICB0aHJvdyBlXHJcbiAgfVxyXG5cclxuICByZXR1cm4gY2FjaGVkLmNvbm5cclxufVxyXG5cclxuZXhwb3J0IGRlZmF1bHQgZGJDb25uZWN0Il0sIm5hbWVzIjpbIm1vbmdvb3NlIiwiTU9OR09fVVJMIiwicHJvY2VzcyIsImVudiIsImNhY2hlZCIsImdsb2JhbCIsImNvbm4iLCJwcm9taXNlIiwiZGJDb25uZWN0IiwiRXJyb3IiLCJvcHRzIiwiYnVmZmVyQ29tbWFuZHMiLCJjb25uZWN0IiwidGhlbiIsImUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(api)/./util/mongo.js\n");
 
 /***/ })
 
@@ -493,7 +70,7 @@ async function handler(req, res) {
 var __webpack_require__ = require("../../webpack-api-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [597], () => (__webpack_exec__(4042)));
+var __webpack_exports__ = (__webpack_exec__("(api)/./pages/api/cart/index.js"));
 module.exports = __webpack_exports__;
 
 })();
