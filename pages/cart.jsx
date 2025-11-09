@@ -215,10 +215,10 @@ const Cart = () => {
                         alt={product.title}
                         width={70}
                         height={50}
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'cover', width: 70, height: "auto" }}
                       />
                     ) : (
-                      <div style={{ width: 70, height: 50 }} />
+                      <div style={{ width: 70, height: "auto" }} />
                     )}
                   </div>
                   <div className={styles.cardContent}>
