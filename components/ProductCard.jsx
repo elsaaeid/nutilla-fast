@@ -160,8 +160,8 @@ const ProductCard = ({ product }) => {
           <Image
             src={product.img}
             alt={product.title}
-            width={200}
-            height={200}
+            width={150}
+            height={150}
             className={styles.image}
           />
       </div>
