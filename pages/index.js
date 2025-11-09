@@ -11,7 +11,7 @@ export default function Home({ productsList }) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Nutella Restaurant</title>
+        <title>Nutilla Fast</title>
         <meta name="description" content="Best nutella shop in town" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
