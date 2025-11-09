@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import { reset, removeProduct, setCart, updateQuantity } from "../redux/cartSlice";
+import Image from 'next/image'
 import QtyControls from '../components/QtyControls'
 import OrderDetail from '../components/OrderDetail'
 import { normalizeCartItems, computeSubtotal } from '../util/cartHelpers'
@@ -208,11 +209,17 @@ const Cart = () => {
               <div className={styles.itemCard} key={product.cartItemId || product._id || product.productId || idx}>
                 <div className={styles.cardRow}>
                   <div className={styles.imgContainer}>
-                    <img
-                      src={product.img}
-                      alt={product.title}
-                      style={{ objectFit: 'cover', width: 'max-content', height: '50px' }}
-                    />
+                    {product?.img ? (
+                      <Image
+                        src={product.img}
+                        alt={product.title}
+                        width={50}
+                        height={50}
+                        style={{ objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div style={{ width: 50, height: 50, background: '#eee' }} />
+                    )}
                   </div>
                   <div className={styles.cardContent}>
                     <div className={styles.name}>{product.title}</div>
