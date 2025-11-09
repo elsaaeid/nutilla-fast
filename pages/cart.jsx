@@ -213,12 +213,12 @@ const Cart = () => {
                       <Image
                         src={product.img}
                         alt={product.title}
-                        width={50}
+                        width={70}
                         height={50}
                         style={{ objectFit: 'cover' }}
                       />
                     ) : (
-                      <div style={{ width: 50, height: 50, background: '#eee' }} />
+                      <div style={{ width: 70, height: 50 }} />
                     )}
                   </div>
                   <div className={styles.cardContent}>
